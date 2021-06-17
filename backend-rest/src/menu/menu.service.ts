@@ -19,4 +19,8 @@ export class MenuService {
       findAll() {
           return this.menuRepo.findAll();
       }
+
+      update(menu: CreateMenuDto, id: string) {
+        return this.menuRepo.update(menu, { where: { id: id } });
+      }
 }
