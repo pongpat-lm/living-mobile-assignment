@@ -4,6 +4,10 @@ import { Expose } from 'class-transformer';
 export class CategoryDto {
     @ApiProperty()
     @Expose()
+    id: string;
+
+    @ApiProperty()
+    @Expose()
     name: string;
 
     @ApiProperty()
