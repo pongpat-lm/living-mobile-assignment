@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Put,
+  Delete,
+  Param,
+} from '@nestjs/common';
 import { StoreService } from './store.service';
 import { CreateStoreDto } from './dto/createStore.dto';
 import { ApiOperation } from '@nestjs/swagger';
@@ -6,6 +14,8 @@ import {
   ApiCreatedResponse,
   ApiOkResponse,
   ApiBadRequestResponse,
+  ApiNoContentResponse,
+  ApiConflictResponse
 } from '@nestjs/swagger';
 import { UsePipes, ValidationPipe } from '@nestjs/common';
 
@@ -19,11 +29,11 @@ export class StoreController {
   @Post()
   @ApiCreatedResponse({
     // HTTP 201
-    description: 'The user has been successfully created.',
+    description: 'The store has been successfully created.',
     type: StoreDto,
   })
   @ApiBadRequestResponse({
-    description: 'The create-user input is invalid.',
+    description: 'The create-store input is invalid.',
   })
   @UsePipes(
     new ValidationPipe({
@@ -51,5 +61,35 @@ export class StoreController {
     return users.map((user) =>
       plainToClass(StoreDto, user, { excludeExtraneousValues: true }),
     );
+  }
+
+  @Put(':id')
+  @ApiOkResponse({
+    // HTTP 200
+    description: 'Update Successfully.',
+    type: StoreDto,
+  })
+  @ApiBadRequestResponse({
+    description: 'The update-store input is invalid.',
+  })
+  async update(
+    @Body() createStoreDto: CreateStoreDto,
+    @Param('id') id: string,
+  ) {
+    const user = await this.storeService.update(createStoreDto, id);
+    return plainToClass(StoreDto, user, { excludeExtraneousValues: true });
+  }
+
+  @Delete(':id')
+  @ApiOkResponse({
+    description: `Delete Successfully.`,
+    type: StoreDto
+  })
+  @ApiConflictResponse({
+    description: `No resource matched.`
+  })
+  async delete(@Param('id') id: string) {
+    const user = await this.storeService.delete(id);
+    return plainToClass(StoreDto, user, { excludeExtraneousValues: true });
   }
 }
