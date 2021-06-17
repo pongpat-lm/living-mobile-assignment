@@ -14,7 +14,7 @@ export class MenuController {
   @ApiOperation({ summary: 'Create menu' })
   @ApiCreatedResponse({
     // HTTP 201
-    description: 'The user has been successfully created.',
+    description: 'The menu has been successfully created.',
     type: MenuDto,
   })
   async create(@Body() createMenuDto: CreateMenuDto) {
@@ -27,7 +27,7 @@ export class MenuController {
   @ApiOperation({ summary: 'Find all menu' })
   @ApiOkResponse({
     // HTTP 200
-    description: 'All of users',
+    description: 'All of menus',
     isArray: true,
     type: MenuDto,
   })
@@ -45,7 +45,7 @@ export class MenuController {
     type: MenuDto,
   })
   @ApiBadRequestResponse({
-    description: 'The update-store input is invalid.',
+    description: 'The update-menu input is invalid.',
   })
   async update(
     @Body() createMenuDto: CreateMenuDto,
