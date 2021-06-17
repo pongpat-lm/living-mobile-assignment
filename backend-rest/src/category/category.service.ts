@@ -18,4 +18,12 @@ export class CategoryService {
       findAll() {
           return this.categoryRepo.findAll();
       }
+
+      update(category: CreateCategoryDto, id: string) {
+        return this.categoryRepo.update(category, { where: { id: id } });
+      }
+    
+      delete(id: string) {
+        return this.categoryRepo.destroy({ where: { id: id } });
+      }
 }
