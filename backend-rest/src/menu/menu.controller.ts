@@ -1,8 +1,8 @@
-import { Body, Controller, Get, Post, Put, Param, } from '@nestjs/common';
+import { Body, Controller, Get, Post, Put, Param, Delete} from '@nestjs/common';
 import { MenuService } from './menu.service';
 import { CreateMenuDto } from './dto/createMenu.dto';
 import { ApiOperation } from '@nestjs/swagger';
-import { ApiCreatedResponse, ApiOkResponse, ApiBadRequestResponse } from '@nestjs/swagger';
+import { ApiCreatedResponse, ApiOkResponse, ApiBadRequestResponse, ApiConflictResponse } from '@nestjs/swagger';
 import { plainToClass } from 'class-transformer';
 import { MenuDto } from './dto/menu.dto';
 
@@ -39,6 +39,7 @@ export class MenuController {
   }
 
   @Put(':id')
+  @ApiOperation({ summary: 'Update menu' })
   @ApiOkResponse({
     // HTTP 200
     description: 'Update Successfully.',
@@ -53,5 +54,19 @@ export class MenuController {
   ) {
     const menu = await this.menuService.update(createMenuDto, id);
     return plainToClass(MenuDto, menu, { excludeExtraneousValues: true });
+  }
+
+  @Delete(':id')
+  @ApiOperation({ summary: 'Delete menu' })
+  @ApiOkResponse({
+    description: `Delete Successfully.`,
+    type: MenuDto
+  })
+  @ApiConflictResponse({
+    description: `No resource matched.`
+  })
+  async delete(@Param('id') id: string) {
+    const user = await this.menuService.delete(id);
+    return plainToClass(MenuDto, user, { excludeExtraneousValues: true });
   }
 }

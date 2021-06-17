@@ -7,12 +7,10 @@ import { CreateMenuDto } from './dto/createMenu.dto';
 export class MenuService {
     constructor(
         @InjectModel(MenuModel) // inject model and use it as repository
-        private menuRepo: typeof MenuModel, // UserModel act like userRepo here.
+        private menuRepo: typeof MenuModel,
       ) {}
     
       create(menu: CreateMenuDto) {
-          // userRepo is Sequelize model it have many functions to work with database.
-          // more info please see below documents.
           return this.menuRepo.create(menu);
       }
     
@@ -22,5 +20,9 @@ export class MenuService {
 
       update(menu: CreateMenuDto, id: string) {
         return this.menuRepo.update(menu, { where: { id: id } });
+      }
+
+      delete(id: string) {
+        return this.menuRepo.destroy({ where: { id: id } });
       }
 }
