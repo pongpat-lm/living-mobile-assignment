@@ -2,7 +2,13 @@ import { Body, Controller, Get, Post } from '@nestjs/common';
 import { StoreService } from './store.service';
 import { CreateStoreDto } from './dto/createStore.dto';
 import { ApiOperation } from '@nestjs/swagger';
-import { ApiCreatedResponse, ApiOkResponse } from '@nestjs/swagger';
+import {
+  ApiCreatedResponse,
+  ApiOkResponse,
+  ApiBadRequestResponse,
+} from '@nestjs/swagger';
+import { UsePipes, ValidationPipe } from '@nestjs/common';
+
 import { plainToClass } from 'class-transformer';
 import { StoreDto } from './dto/store.dto';
 
@@ -16,6 +22,17 @@ export class StoreController {
     description: 'The user has been successfully created.',
     type: StoreDto,
   })
+  @ApiBadRequestResponse({
+    description: 'The create-user input is invalid.',
+  })
+  @UsePipes(
+    new ValidationPipe({
+      transform: true,
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      forbidUnknownValues: true,
+    }),
+  )
   async create(@Body() createStoreDto: CreateStoreDto) {
     const user = await this.storeService.create(createStoreDto);
     // this will map User model value to UserDto model value.
