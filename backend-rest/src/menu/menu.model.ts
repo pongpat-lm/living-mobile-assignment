@@ -16,7 +16,7 @@ export class MenuModel extends Model {
     () => CategoryModel
   )
   @Column
-  categoryId: string;
+  public categoryId: string;
 
   @Column
   name: string;
