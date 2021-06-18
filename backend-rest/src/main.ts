@@ -7,6 +7,7 @@ async function bootstrap() {
   // config Swagger document's descriptions
   const config = new DocumentBuilder()
     .setTitle('DVD Rental API')
+    .setTitle('Store')
     .setVersion('1.0')
     .build();
 
@@ -14,7 +15,6 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
 
   SwaggerModule.setup('api', app, document); // setup Swagger document at route "/api"
-
   await app.listen(3000);
 }
 bootstrap();
