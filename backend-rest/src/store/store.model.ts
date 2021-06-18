@@ -1,5 +1,5 @@
-import { Column, Model, Table, DataType } from 'sequelize-typescript';
-
+import { Column, Model, Table, DataType, HasMany } from 'sequelize-typescript';
+import { CategoryModel } from 'src/category/category.model';
 @Table({
   tableName: 'store',
 })
@@ -20,4 +20,7 @@ export class StoreModel extends Model {
 
   @Column
   rating: number;
+
+  @HasMany(() => CategoryModel)
+  store: StoreModel[];
 }
