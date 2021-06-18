@@ -48,6 +48,41 @@ describe('StoreController (e2e)', () => {
         });
     });
 
+    describe('Create store', () => {
+        it('When create with valid input, then response 200 (OK) with created store', async () => {
+            // arrange
+            const createStoreInput = {
+                name: 'MK',
+                description: 'sukiyaki',
+                rating: 9,
+            };
+
+            return request(app.getHttpServer())
+                .post('/store')
+                .send(createStoreInput)
+                .expect(201)
+                .then((response) => {
+                    expect(response.body).toEqual(
+                        expect.objectContaining(createStoreInput),
+                    );
+                });
+        });
+
+        it('When create with invalid input (rating is not number.), then response 400', async () => {
+            // arrange
+            const createStoreInput = {
+                name: 'MK',
+                description: 'sukiyaki',
+                rating: "sdf",
+            };
+
+            return request(app.getHttpServer())
+                .post('/store')
+                .send(createStoreInput)
+                .expect(400)
+        });
+    });
+
     afterAll(async () => {
         await app.close();
     });
