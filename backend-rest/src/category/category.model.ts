@@ -7,8 +7,8 @@ import {
   BelongsTo,
   HasMany,
 } from 'sequelize-typescript';
-import { StoreModel } from 'src/store/store.model';
-import { MenuModel } from 'src/menu/menu.model';
+import { StoreModel } from '../store/store.model';
+import { MenuModel } from '../menu/menu.model';
 @Table({
   tableName: 'category',
 })
