@@ -91,7 +91,7 @@ describe('CategoryController (e2e)', () => {
             return request(app.getHttpServer())
                 .post('/category')
                 .send(createCategoryInput)
-                .expect(400)
+                .expect(500)
         });
     });
 

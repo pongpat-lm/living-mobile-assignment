@@ -18,14 +18,6 @@ export class CategoryController {
     description: 'The category has been successfully created.',
     type: CategoryDto,
   })
-  @UsePipes(
-    new ValidationPipe({
-      transform: true,
-      whitelist: true,
-      forbidNonWhitelisted: true,
-      forbidUnknownValues: true,
-    }),
-  )
   async create(@Body() createCategoryDto: CreateCategoryDto) {
     const category = await this.categoryService.create(createCategoryDto);
     // this will map User model value to UserDto model value.
@@ -57,14 +49,6 @@ export class CategoryController {
   @ApiBadRequestResponse({
     description: 'The update-category input is invalid.',
   })
-  @UsePipes(
-    new ValidationPipe({
-      transform: true,
-      whitelist: true,
-      forbidNonWhitelisted: true,
-      forbidUnknownValues: true,
-    }),
-  )
   async update(
     @Body() createStoreDto: CreateCategoryDto,
     @Param('id') id: string,
@@ -82,14 +66,6 @@ export class CategoryController {
   @ApiConflictResponse({
     description: `No resource matched.`
   })
-  @UsePipes(
-    new ValidationPipe({
-      transform: true,
-      whitelist: true,
-      forbidNonWhitelisted: true,
-      forbidUnknownValues: true,
-    }),
-  )
   async delete(@Param('id') id: string) {
     const category = await this.categoryService.delete(id);
     return plainToClass(CategoryDto, category, { excludeExtraneousValues: true });

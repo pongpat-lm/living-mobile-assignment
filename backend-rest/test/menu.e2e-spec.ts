@@ -107,7 +107,7 @@ describe('MenuController (e2e)', () => {
             return request(app.getHttpServer())
                 .post('/menu')
                 .send(createMenuInput)
-                .expect(400)
+                .expect(500)
         });
     });
 
