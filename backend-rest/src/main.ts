@@ -6,7 +6,6 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   // config Swagger document's descriptions
   const config = new DocumentBuilder()
-    .setTitle('DVD Rental API')
     .setTitle('Store')
     .setVersion('1.0')
     .build();

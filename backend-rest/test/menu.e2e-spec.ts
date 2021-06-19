@@ -4,10 +4,16 @@ import { MenuModule } from '../src/menu/menu.module';
 import { MenuService } from '../src/menu/menu.service';
 import { INestApplication } from '@nestjs/common';
 import { SequelizeModule } from '@nestjs/sequelize';
+import { StoreModule } from '../src/store/store.module';
+import { CategoryModule } from '../src/category/category.module';
+import { StoreService } from '../src/store/store.service';
+import { CategoryService } from '../src/category/category.service';
 
-describe('StoreController (e2e)', () => {
+describe('MenuController (e2e)', () => {
     let app: INestApplication;
-    let service: MenuService;
+    let storeService: StoreService;
+    let categoryService: CategoryService;
+    let menuService: MenuService;
     beforeAll(async () => {
         const module = await Test.createTestingModule({
             imports: [
@@ -18,24 +24,46 @@ describe('StoreController (e2e)', () => {
                     logging: false,
                 }),
                 MenuModule,
+                StoreModule,
+                CategoryModule
             ],
-            providers: [MenuService],
+            providers: [MenuService, StoreService, CategoryService],
         }).compile();
 
         app = module.createNestApplication();
         await app.init();
 
-        service = module.get<MenuService>(MenuService);
+        storeService = module.get<StoreService>(StoreService);
+        categoryService = module.get<CategoryService>(CategoryService);
+        menuService = module.get<MenuService>(MenuService);
+
+        const createStoreInput = {
+            id: '32bf845d-6863-40f1-8cb8-6a9dafcb99c0',
+            name: "KFC",
+            description: "Chic",
+            rating: 8
+        };
+
+        const createCategoryInput = {
+            id: '202a7b22-41c6-4061-a583-71ee6988315c',
+            name: 'Chicken',
+            storeId: '32bf845d-6863-40f1-8cb8-6a9dafcb99c0'
+        };
+
+        await storeService.create(createStoreInput);
+        await categoryService.create(createCategoryInput);
     });
 
     describe('Find all menus', () => {
         it('When there is one menu, then return that menu', async () => {
+            
             const createMenuInput = {
                 name: 'AB',
                 categoryId: '202a7b22-41c6-4061-a583-71ee6988315c',
                 price: 99
             };
-            await service.create(createMenuInput);
+
+            await menuService.create(createMenuInput);
 
             return request(app.getHttpServer())
                 .get('/menu')

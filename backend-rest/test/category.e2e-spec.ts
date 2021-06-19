@@ -4,10 +4,14 @@ import { CategoryModule } from '../src/category/category.module';
 import { CategoryService } from '../src/category/category.service';
 import { INestApplication } from '@nestjs/common';
 import { SequelizeModule } from '@nestjs/sequelize';
+import { StoreModule } from '../src/store/store.module';
+import { MenuModule } from '../src/menu/menu.module';
+import { StoreService } from '../src/store/store.service';
 
-describe('StoreController (e2e)', () => {
+describe('CategoryController (e2e)', () => {
     let app: INestApplication;
-    let service: CategoryService;
+    let storeService: StoreService;
+    let categoryService: CategoryService;
     beforeAll(async () => {
         const module = await Test.createTestingModule({
             imports: [
@@ -18,14 +22,25 @@ describe('StoreController (e2e)', () => {
                     logging: false,
                 }),
                 CategoryModule,
+                StoreModule,
+                MenuModule
             ],
-            providers: [CategoryService],
+            providers: [CategoryService, StoreService],
         }).compile();
 
         app = module.createNestApplication();
         await app.init();
 
-        service = module.get<CategoryService>(CategoryService);
+        storeService = module.get<StoreService>(StoreService);
+        categoryService = module.get<CategoryService>(CategoryService);
+
+        const createStoreInput = {
+            id: '32bf845d-6863-40f1-8cb8-6a9dafcb99c0',
+            name: "KFC",
+            description: "Chic",
+            rating: 8
+        };
+        await storeService.create(createStoreInput);
     });
 
     describe('Find all categories', () => {
@@ -34,7 +49,7 @@ describe('StoreController (e2e)', () => {
                 name: 'Chicken',
                 storeId: '32bf845d-6863-40f1-8cb8-6a9dafcb99c0'
             };
-            await service.create(createCategoryInput);
+            await categoryService.create(createCategoryInput);
 
             return request(app.getHttpServer())
                 .get('/category')

@@ -72,6 +72,14 @@ export class StoreController {
   @ApiBadRequestResponse({
     description: 'The update-store input is invalid.',
   })
+  @UsePipes(
+    new ValidationPipe({
+      transform: true,
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      forbidUnknownValues: true,
+    }),
+  )
   async update(
     @Body() createStoreDto: CreateStoreDto,
     @Param('id') id: string,
@@ -88,6 +96,14 @@ export class StoreController {
   @ApiConflictResponse({
     description: `No resource matched.`
   })
+  @UsePipes(
+    new ValidationPipe({
+      transform: true,
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      forbidUnknownValues: true,
+    }),
+  )
   async delete(@Param('id') id: string) {
     const user = await this.storeService.delete(id);
     return plainToClass(StoreDto, user, { excludeExtraneousValues: true });

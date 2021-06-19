@@ -4,6 +4,8 @@ import { StoreModule } from '../src/store/store.module';
 import { StoreService } from '../src/store/store.service';
 import { INestApplication } from '@nestjs/common';
 import { SequelizeModule } from '@nestjs/sequelize';
+import { CategoryModule } from '../src/category/category.module';
+import { MenuModule } from '../src/menu/menu.module';
 
 describe('StoreController (e2e)', () => {
     let app: INestApplication;
@@ -18,6 +20,8 @@ describe('StoreController (e2e)', () => {
                     logging: false,
                 }),
                 StoreModule,
+                CategoryModule,
+                MenuModule
             ],
             providers: [StoreService],
         }).compile();
