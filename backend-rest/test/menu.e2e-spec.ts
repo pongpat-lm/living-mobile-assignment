@@ -111,6 +111,49 @@ describe('MenuController (e2e)', () => {
         });
     });
 
+    describe("Update menu", () => {
+        it('When update with valid input, then response 200 (OK) with updated menu', async () => {
+            // arrange
+            const createMenuInput = {
+                id: '8570d6d2-9fb1-4bce-aaef-a685343956e7',
+                name: 'AB',
+                categoryId: '202a7b22-41c6-4061-a583-71ee6988315c',
+                price: 99
+            };
+
+            const updateMenuInput = {
+                name: 'XXX',
+                categoryId: '202a7b22-41c6-4061-a583-71ee6988315c',
+                price: 199
+            };
+
+            await menuService.create(createMenuInput);
+
+            return request(app.getHttpServer())
+                .put(`/menu/${createMenuInput.id}`)
+                .send(updateMenuInput)
+                .expect(200)
+        });
+    })
+
+    describe("Delete menu", () => {
+        it('When delete with valid input, then response 200 (OK) with deleted menu', async () => {
+            // arrange
+            const createMenuInput = {
+                id: '816b177a-85b1-4b86-85c7-2ddf67575722',
+                name: 'AB',
+                categoryId: '202a7b22-41c6-4061-a583-71ee6988315c',
+                price: 99
+            };
+
+            await menuService.create(createMenuInput);
+
+            return request(app.getHttpServer())
+                .delete(`/menu/${createMenuInput.id}`)
+                .expect(200)
+        });
+    })
+
     afterAll(async () => {
         await app.close();
     });

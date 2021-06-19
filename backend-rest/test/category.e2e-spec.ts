@@ -95,6 +95,46 @@ describe('CategoryController (e2e)', () => {
         });
     });
 
+    describe("Update category", () => {
+        it('When update with valid input, then response 200 (OK) with updated category', async () => {
+            // arrange
+            const createCategoryInput = {
+                id: '8570d6d2-9fb1-4bce-aaef-a685343956e7',
+                name: 'Chicken',
+                storeId: '32bf845d-6863-40f1-8cb8-6a9dafcb99c0'
+            };
+
+            const updateCategoryInput = {
+                name: 'Fish',
+                storeId: '32bf845d-6863-40f1-8cb8-6a9dafcb99c0'
+            };
+
+            await categoryService.create(createCategoryInput);
+
+            return request(app.getHttpServer())
+                .put(`/category/${createCategoryInput.id}`)
+                .send(updateCategoryInput)
+                .expect(200)
+        });
+    })
+
+    describe("Delete category", () => {
+        it('When delete with valid input, then response 200 (OK) with deleted category', async () => {
+            // arrange
+            const createCategoryInput = {
+                id: '816b177a-85b1-4b86-85c7-2ddf67575722',
+                name: 'Pork',
+                storeId: '32bf845d-6863-40f1-8cb8-6a9dafcb99c0'
+            };
+
+            await categoryService.create(createCategoryInput);
+
+            return request(app.getHttpServer())
+                .delete(`/category/${createCategoryInput.id}`)
+                .expect(200)
+        });
+    })
+
     afterAll(async () => {
         await app.close();
     });

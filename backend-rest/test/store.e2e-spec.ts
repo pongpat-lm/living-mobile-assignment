@@ -87,6 +87,49 @@ describe('StoreController (e2e)', () => {
         });
     });
 
+    describe("Update store", () => {
+        it('When update with valid input, then response 200 (OK) with updated store', async () => {
+            // arrange
+            const createStoreInput = {
+                id: '32bf845d-6863-40f1-8cb8-6a9dafcb99c0',
+                name: 'KFC',
+                description: 'Chicken',
+                rating: 5,
+            };
+
+            const updateStoreInput = {
+                name: 'MK',
+                description: 'sukiyaki',
+                rating: 9,
+            };
+
+            await service.create(createStoreInput);
+
+            return request(app.getHttpServer())
+                .put(`/store/${createStoreInput.id}`)
+                .send(updateStoreInput)
+                .expect(200)
+        });
+    })
+
+    describe("Delete store", () => {
+        it('When delete with valid input, then response 200 (OK) with delete store', async () => {
+            // arrange
+            const createStoreInput = {
+                id: '5d2e22ec-1dc3-4dc1-a2be-1d5f8d5d864f',
+                name: 'Pizza1112',
+                description: 'Pizza',
+                rating: 5,
+            };
+
+            await service.create(createStoreInput);
+
+            return request(app.getHttpServer())
+                .delete(`/store/${createStoreInput.id}`)
+                .expect(200)
+        });
+    })
+
     afterAll(async () => {
         await app.close();
     });
