@@ -116,6 +116,27 @@ describe('CategoryController (e2e)', () => {
                 .send(updateCategoryInput)
                 .expect(200)
         });
+
+        it('When update with invalid input(name is not string), then response 400', async () => {
+            // arrange
+            const createCategoryInput = {
+                id: '8570d6d2-9fb1-4bce-acef-a685343956e7',
+                name: 'Chicken',
+                storeId: '32bf845d-6863-40f1-8cb8-6a9dafcb99c0'
+            };
+
+            const updateCategoryInput = {
+                name: 7600,
+                storeId: '32bf845d-6863-40f1-8cb8-6a9dafcb99c0'
+            };
+
+            await categoryService.create(createCategoryInput);
+
+            return request(app.getHttpServer())
+                .put(`/category/${createCategoryInput.id}`)
+                .send(updateCategoryInput)
+                .expect(400)
+        });
     })
 
     describe("Delete category", () => {

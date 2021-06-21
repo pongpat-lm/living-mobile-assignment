@@ -134,6 +134,29 @@ describe('MenuController (e2e)', () => {
                 .send(updateMenuInput)
                 .expect(200)
         });
+
+        it('When update with invalid input, then response 400', async () => {
+            // arrange
+            const createMenuInput = {
+                id: '8570d6d2-9fb1-4bce-aaef-a675343956e7',
+                name: 'AB',
+                categoryId: '202a7b22-41c6-4061-a583-71ee6988315c',
+                price: 99
+            };
+
+            const updateMenuInput = {
+                name: 'XXX',
+                categoryId: '202a7b22-41c6-4061-a583-71ee6988315c',
+                price: "199"
+            };
+
+            await menuService.create(createMenuInput);
+
+            return request(app.getHttpServer())
+                .put(`/menu/${createMenuInput.id}`)
+                .send(updateMenuInput)
+                .expect(400)
+        });
     })
 
     describe("Delete menu", () => {

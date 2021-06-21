@@ -110,6 +110,29 @@ describe('StoreController (e2e)', () => {
                 .send(updateStoreInput)
                 .expect(200)
         });
+
+        it('When update with invalid input (rating is string), then response 400', async () => {
+            // arrange
+            const createStoreInput = {
+                id: '32bf845d-6863-40f1-8ca8-6a9dafcb99c0',
+                name: 'KFC',
+                description: 'Chicken',
+                rating: 5,
+            };
+
+            const updateStoreInput = {
+                name: 'MK',
+                description: 'sukiyaki',
+                rating: "sdf",
+            };
+
+            await service.create(createStoreInput);
+
+            return request(app.getHttpServer())
+                .put(`/store/${createStoreInput.id}`)
+                .send(updateStoreInput)
+                .expect(400)
+        });
     })
 
     describe("Delete store", () => {
