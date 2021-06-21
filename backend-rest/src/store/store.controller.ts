@@ -96,14 +96,6 @@ export class StoreController {
   @ApiConflictResponse({
     description: `No resource matched.`
   })
-  @UsePipes(
-    new ValidationPipe({
-      transform: true,
-      whitelist: true,
-      forbidNonWhitelisted: true,
-      forbidUnknownValues: true,
-    }),
-  )
   async delete(@Param('id') id: string) {
     const user = await this.storeService.delete(id);
     return plainToClass(StoreDto, user, { excludeExtraneousValues: true });

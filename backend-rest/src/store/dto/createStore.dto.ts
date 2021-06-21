@@ -1,8 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsNumber, Min, Max } from 'class-validator';
+import { IsString, IsNumber, Min, Max, IsNotEmpty } from 'class-validator';
 
 export class CreateStoreDto {
     @ApiProperty()
+    @IsNotEmpty()
     @IsString()
     name: string;
 

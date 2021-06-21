@@ -22,6 +22,7 @@ export class MenuController {
   @ApiBadRequestResponse({
     description: 'The create-menu input is invalid.',
   })
+  @UsePipes(new ValidationPipe())
   async create(@Body() createMenuDto: CreateMenuDto) {
     const menu = await this.menuService.create(createMenuDto);
     // this will map User model value to UserDto model value.
@@ -53,6 +54,7 @@ export class MenuController {
   @ApiBadRequestResponse({
     description: 'The update-menu input is invalid.',
   })
+  @UsePipes(new ValidationPipe())
   async update(
     @Body() createMenuDto: CreateMenuDto,
     @Param('id') id: string,
