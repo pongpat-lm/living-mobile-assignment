@@ -7,7 +7,7 @@ export class StoreModel extends Model {
   @Column({
     defaultValue: DataType.UUIDV4,
     primaryKey: true,
-    type: DataType.UUIDV4,
+    type: DataType.UUID,
     allowNull: false,
   })
   id: string;
