@@ -55,6 +55,18 @@ export class CategoryController {
     );
   }
 
+  @Get(':id')
+  @ApiOperation({ summary: 'find one category' })
+  @ApiOkResponse({
+    // HTTP 200
+    description: 'Category',
+    type: CategoryDto,
+  })
+  async findById(@Param('id') id: string) {
+    const category = await this.categoryService.findById(id);
+    return plainToClass(CategoryDto, category, { excludeExtraneousValues: true });
+  }
+
   @Put(':id')
   @ApiOperation({ summary: 'Update category' })
   @ApiOkResponse({

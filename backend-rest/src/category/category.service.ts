@@ -14,6 +14,10 @@ export class CategoryService {
           // more info please see below documents.
           return this.categoryRepo.create(category);
       }
+
+      findById(id: string) {
+        return this.categoryRepo.findByPk(id);
+      }
     
       findAll() {
           return this.categoryRepo.findAll();

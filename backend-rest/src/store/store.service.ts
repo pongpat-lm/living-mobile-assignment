@@ -16,6 +16,10 @@ export class StoreService {
     return this.storeRepo.create(store);
   }
 
+  findById(id: string) {
+    return this.storeRepo.findByPk(id);
+  }
+
   findAll() {
     return this.storeRepo.findAll();
   }

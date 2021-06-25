@@ -14,6 +14,10 @@ export class MenuService {
           return this.menuRepo.create(menu);
       }
     
+      findById(id: string) {
+        return this.menuRepo.findByPk(id);
+      }
+
       findAll() {
           return this.menuRepo.findAll();
       }

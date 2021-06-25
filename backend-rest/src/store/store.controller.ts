@@ -6,6 +6,8 @@ import {
   Put,
   Delete,
   Param,
+  Res,
+  HttpStatus
 } from '@nestjs/common';
 import { StoreService } from './store.service';
 import { CreateStoreDto } from './dto/createStore.dto';
@@ -61,6 +63,17 @@ export class StoreController {
     return users.map((user) =>
       plainToClass(StoreDto, user, { excludeExtraneousValues: true }),
     );
+  }
+
+  @Get(':id')
+  @ApiOkResponse({
+    // HTTP 200
+    description: 'Store',
+    type: StoreDto,
+  })
+  async findById(@Param('id') id: string) {
+    const user = await this.storeService.findById(id);
+    return plainToClass(StoreDto, user, { excludeExtraneousValues: true });
   }
 
   @Put(':id')

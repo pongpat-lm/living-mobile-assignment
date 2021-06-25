@@ -44,6 +44,18 @@ export class MenuController {
     );
   }
 
+  @Get(':id')
+  @ApiOperation({ summary: 'find one menu' })
+  @ApiOkResponse({
+    // HTTP 200
+    description: 'Category',
+    type: MenuDto,
+  })
+  async findById(@Param('id') id: string) {
+    const menu = await this.menuService.findById(id);
+    return plainToClass(MenuDto, menu, { excludeExtraneousValues: true });
+  }
+
   @Put(':id')
   @ApiOperation({ summary: 'Update menu' })
   @ApiOkResponse({
