@@ -70,7 +70,7 @@
             >Cancel</el-button
           >
           <el-button type="primary" @click="submitForm('formEdit')" round
-            >Confirm</el-button
+            >Edit Category</el-button
           >
         </span>
       </el-dialog>
@@ -105,7 +105,7 @@
             >Cancel</el-button
           >
           <el-button type="primary" @click="submitForm('formAdd')" round
-            >Confirm</el-button
+            >Add Category</el-button
           >
         </span>
       </el-dialog>
@@ -191,6 +191,10 @@ export default {
   margin-bottom: 20px;
 }
 
+.el-dialog__header {
+  border-bottom: 1px solid #D9D9D9;
+}
+
 .name {
   font-weight: bold;
   font-size: 30px;
@@ -212,4 +216,5 @@ export default {
 .operation > *:hover {
   opacity: 0.5;
 }
+
 </style>
