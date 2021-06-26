@@ -19,9 +19,9 @@
         <el-table-column prop="storeName" label="Store Name"></el-table-column>
         <el-table-column label=" ">
           <div class="operation">
-            <img src="../assets/Edit.png" alt="edit" class="edit">
-            <img src="../assets/Copy.png" alt="copy" class="copy">
-            <img src="../assets/Delete.png" alt="delete" class="delete">
+            <img src="../../assets/Edit.png" alt="edit" class="edit">
+            <img src="../../assets/Copy.png" alt="copy" class="copy">
+            <img src="../../assets/Delete.png" alt="delete" class="delete">
           </div>
         </el-table-column>
       </el-table>
