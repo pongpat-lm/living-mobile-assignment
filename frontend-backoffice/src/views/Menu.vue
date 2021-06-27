@@ -12,11 +12,7 @@
       </el-col>
       <el-col :span="6" :offset="12">
         <div class="grid-content bg-purple">
-          <el-button type="primary"  size="medium" icon="el-icon-plus" round @click="dialogFormVisible = true">
-            Add New Menu 
-          </el-button>
-
-          
+          <menuForm :form="form" class="m-form"></menuForm>
         </div>
       </el-col>
     </el-row>
@@ -24,7 +20,7 @@
     <data-tables 
     class="menu-table"
     :data="tableData" 
-    :total="5">
+    :total="100">
     <el-table-column  
       label="ID"
       prop="id"
@@ -32,7 +28,7 @@
     </el-table-column>
     <el-table-column 
       label="Category"
-      prop="category"
+      prop="categoryId"
       sortable="custom">
     </el-table-column>
     <el-table-column 
@@ -45,71 +41,63 @@
       prop="price"
       sortable="custom">
     </el-table-column>
-    <el-table-column fixed="right">
-          <template slot-scope="scope">
-            <el-button type="text" size="small" @click="editUsexr(scope.row)">Edit</el-button>
+    <!-- <el-table-column fixed="right">
+            <el-button type="text" size="small">Edit</el-button>
             <el-button type="text" size="small">Copy</el-button>
-            <el-button type="text" size="small">Delete</el-button>
-          </template>
-    </el-table-column>
+            <el-button type="text" size="small"  @click="deleteMenu(id)">Delete</el-button>
+    </el-table-column> -->
+
+    <el-table-column fixed="right">
+    <template slot-scope="scope">
+        <!-- <el-button type="text" size="small" @click="handleMenuEdit(scope.$index, scope.row)">
+          Edit 
+        </el-button> -->
+
+        <menuEditForm :form="scope.row"> </menuEditForm>
+        <el-col :span="3">
+          <el-button type="text" size="small"
+            class="icon-color"
+            @click="handleMenuCopy(scope.$index, scope.row)" 
+            icon="el-icon-copy-document"
+            >
+          <!-- Copy  --> 
+         </el-button>
+        </el-col>
+        <el-col :span="3">
+           <el-button type="text" size="small" 
+           class="icon-color"
+           @click="handleMenuDelete(scope.$index, scope.row)" 
+           icon="el-icon-delete">
+          <!-- Delete  -->
+          </el-button>
+        </el-col>
+        
+      </template>
+   </el-table-column>
   </data-tables>
   </el-col>
-
-  <el-dialog title="Add Menu" :visible.sync="dialogFormVisible" class="menu-title">
-  <el-form :model="form">
-    <el-form-item label="Name" :label-width="formLabelWidth" >
-      <el-input v-model="form.name" autocomplete="off"></el-input>
-    </el-form-item>
-    <el-form-item label="Category" :label-width="formLabelWidth">
-      <el-select v-model="form.category" placeholder="Please select a Category" style="width: 100%" >
-        <el-option
-          v-for="item in form.categoryDataset"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value">
-        </el-option>
-      </el-select>
-    </el-form-item>
-    <el-form-item label="Price" :label-width="formLabelWidth">
-      <el-input v-model="form.name" autocomplete="off"></el-input>
-    </el-form-item>
-    
-  </el-form>
-  <span slot="footer" class="dialog-footer">
-    <el-button class="btn-cance" @click="dialogFormVisible = false">Cancel</el-button>
-    <el-button type="primary" @click="dialogFormVisible = false" icon="el-icon-plus" round>Add Menu</el-button>
-
-  </span>
-</el-dialog>
 </el-row>
-
-
+ 
 
 </template>
 
 <script>
+import axios from "axios";
+import menuForm from '../components/menuForm.vue';
+import menuEditForm from '../components/menuEditForm.vue';
+
 export default {
-  name: "menu",
+  name: "Menu",
+  components: {
+    menuForm,
+    menuEditForm
+    },
   data() {
     return {
-       dialogFormVisible: false,
+      //  dialogFormVisible: false,
         form: {
-         
-          categoryDataset: [
-            {
-              value: 'A',
-              label: 'A'
-            },
-            {
-              value: 'B',
-              label: 'B'
-            },
-            {
-              value: 'C',
-              label: 'C'
-            },
-          ],
-          category: '',
+          categoryDataset:[],
+          categoryId: '',
           name: '',
           price: '',
         },
@@ -121,31 +109,64 @@ export default {
           t_name: "name",
           t_price : "price"
         },
-      tableData: [
-        {
-          id: "001",
-          category: "Cate A",
-          name: "Tom",
-          price: 25,
-        },
-        {
-          id: "002",
-          category: "Cate B",
-          name: "Tom",
-          price: 45,
-        },
-        {
-          id: "003",
-          category: "Cate A",
-          name: "Tom",
-          price: 25,
-        }
-      ],
+      tableData: [],
     };
   },
+  
+  created(){
+     this.$root.$refs.index = this;
+  },
+  mounted(){
+    this.setMenuTable()
+  },
   methods: {
-      
+    setMenuTable(){
+      axios
+      .get('http://localhost:3000/menu')
+      .then(response => {
+        this.tableData = response.data;
+      })
     },
+
+    handleMenuEdit(index, row) {
+        console.log(index, row);
+    },
+    handleMenuDelete(index, row) {
+      let uuid = row.id;
+
+      axios
+      .delete(`http://localhost:3000/menu/${uuid}`)
+      .then(response => {
+        if(response.status == '200'){
+          this.setMenuTable()
+        }
+      })
+    },
+    handleMenuCopy(index, row) {
+      let uuid = row.id;
+
+      axios
+      .get(`http://localhost:3000/menu/${uuid}`)
+      .then(response => {
+        if(response.status == '200'){
+          axios.post('http://localhost:3000/menu', {
+                categoryId: response.data.categoryId,
+                name: response.data.name,
+                price: response.data.price
+            }).then(res => {
+              if(res.status == '201'){
+                  this.setMenuTable()
+              }
+            }).catch(err => {
+              console.log(err.response);
+            });
+          
+        }
+      })
+    }
+    
+
+  },
 };
 </script>
 
@@ -163,6 +184,8 @@ export default {
     /* Text/OnLight1 */
 
     color: #231F20;
+
+    margin-top: 50px;
 
   }
 
@@ -184,4 +207,13 @@ export default {
       color: #000000;
       font-weight: bold;
     }
+
+    .icon-color {
+      color:#606266;
+    }
+
+.m-form{
+  margin-top:50px;
+}
+   
 </style>
