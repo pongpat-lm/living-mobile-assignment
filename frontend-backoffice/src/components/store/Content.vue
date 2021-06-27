@@ -24,7 +24,7 @@
     <!-- content -->
     <el-table
       :header-cell-style="{ background: '#F2F2F2' }"
-      :data="storeTable"
+      :data="this.$store.getters.storeData"
       style="width: 1078px"
       height="500"
     >
@@ -213,9 +213,6 @@ export default {
   created() {
     this.fetchStore();
   },
-  mounted() {
-    this.storeTable = this.$store.getters.storeData;
-  },
   methods: {
     toCreate() {
       this.clickCreate = true;
@@ -248,16 +245,16 @@ export default {
       this.$store.dispatch("fetchStore");
     },
     deleteStore(_id) {
-      let value = { _id: _id };
-      this.$store.dispatch("deleteStore", value);
+      let Value = { _id: _id };
+      this.$store.dispatch("deleteStore", Value);
     },
     addStore() {
-      let value = {
-        name: this.name,
-        description: this.description,
-        rating: this.rating,
+      let Value = {
+        name: this.form.name,
+        description: this.form.description,
+        rating: parseInt(this.form.rating),
       };
-      this.$store.dispatch("addStore", value);
+      this.$store.dispatch("addStore", Value);
     },
     // openEdit(Store) {
     //   this.name = Store.name;
@@ -270,14 +267,14 @@ export default {
     //   this.rating = 0;
     // },
     editStore(_id) {
-      let value = {
+      let Value = {
         index: this.editIndex,
         _id: _id,
         name: this.name,
         description: this.description,
         rating: this.rating,
       };
-      this.$store.dispatch("editStore", value).then(this.closeEdit());
+      this.$store.dispatch("editStore", Value).then(this.closeEdit());
     },
   },
 };

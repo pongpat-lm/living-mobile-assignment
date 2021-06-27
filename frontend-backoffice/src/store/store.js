@@ -27,22 +27,22 @@ export const store = new Vuex.Store({
   actions: {
     async fetchStore({ commit }) {
       await Axios.get(storeApi)
-        .then((res) => commit("fetchStore", res.data))
+        .then((res) => commit("fetchStore", { res }))
         .catch((err) => alert(err));
     },
-    async addStore({ commit }, value) {
-      await Axios.post(storeApi, value)
-        .then(() => commit("addStore", { value }))
+    async addStore({ commit }, Value) {
+      await Axios.post(storeApi, Value)
+        .then(() => commit("addStore", { Value }))
         .catch((err) => alert(err));
     },
-    async deleteStore({ commit }, value) {
-      await Axios.delete(storeApi + value._id)
-        .then(() => commit("deleteStore", { value }))
+    async deleteStore({ commit }, Value) {
+      await Axios.delete(storeApi + Value._id)
+        .then(() => commit("deleteStore", { Value }))
         .catch((err) => alert(err));
     },
-    async editStore({ commit }, value) {
-      await Axios.put(storeApi + value._id, value)
-        .then(() => commit("editStore", { value }))
+    async editStore({ commit }, Value) {
+      await Axios.put(storeApi + Value._id, Value)
+        .then(() => commit("editStore", { Value }))
         .catch((err) => alert(err));
     },
   },
@@ -51,16 +51,16 @@ export const store = new Vuex.Store({
     fetchStore(state, { res }) {
       state.storeData = res.data;
     },
-    addStore(state, { value }) {
-      state.storeData.push(value);
+    addStore(state, { Value }) {
+      state.storeData.push(Value);
     },
-    deleteStore(state, { value }) {
-      state.storeData.filter((del) => value.id !== del.id);
+    deleteStore(state, { Value }) {
+      state.storeData.filter((del) => Value.id !== del.id);
     },
-    editStore(state, { value }) {
-      state.storeData[value.id].name = value.name;
-      state.storeData[value.id].description = value.description;
-      state.storeData[value.id].rating = value.rating;
+    editStore(state, { Value }) {
+      state.storeData[Value.id].name = Value.name;
+      state.storeData[Value.id].description = Value.description;
+      state.storeData[Value.id].rating = Value.rating;
     },
   },
 
