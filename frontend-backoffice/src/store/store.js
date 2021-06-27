@@ -2,57 +2,69 @@ import Vue from "vue";
 import Vuex from "vuex";
 import Axios from "axios";
 
-let api = "http://localhost:3000/store/";
+const storeApi = "http://localhost:3000/store/";
 
 Vue.use(Vuex);
 
 export const store = new Vuex.Store({
   state: {
-    tableData: [],
-  },
-
-  mutations: {
-    fetchStore(state, { res }) {
-      state.tableData = res.data;
-    },
-    addStore(state, { payload }) {
-      state.tableData.push(payload);
-    },
-    deleteStore(state, { payload }) {
-      state.tableData.splice(payload.id, 1);
-    },
-    editStore(state, { payload }) {
-      state.tableData[payload.id].name = payload.name;
-      state.tableData[payload.id].description = payload.description;
-      state.tableData[payload.id].rating = payload.rating;
-    },
+    storeData: [
+      // {
+      //   id: "d6fdb4f2-a416-47c0-bac4-6c81c93ab46b",
+      //   name: "coffee club",
+      //   description: "cafe",
+      //   rating: 5,
+      // },
+      // {
+      //   id: "5d180cce-fa21-4268-a2a8-b433b463f179",
+      //   name: "pizza 1112",
+      //   description: "pizza",
+      //   rating: 4,
+      // },
+    ],
   },
 
   actions: {
     async fetchStore({ commit }) {
-      await Axios.get(api)
-        .then((res) => commit("fetchStore", { res }))
+      await Axios.get(storeApi)
+        .then((res) => commit("fetchStore", res.data))
         .catch((err) => alert(err));
     },
-    async addStore({ commit }, payload) {
-      await Axios.post(api, payload)
-        .then(() => commit("addStore", { payload }))
+    async addStore({ commit }, value) {
+      await Axios.post(storeApi, value)
+        .then(() => commit("addStore", { value }))
         .catch((err) => alert(err));
     },
-    async deleteStore({ commit }, payload) {
-      alert(payload._id);
-      await Axios.delete(api + payload._id)
-        .then(() => commit("deleteStore", { payload }))
+    async deleteStore({ commit }, value) {
+      await Axios.delete(storeApi + value._id)
+        .then(() => commit("deleteStore", { value }))
         .catch((err) => alert(err));
     },
-    async editStore({ commit }, payload) {
-      await Axios.put(api + payload._id, payload)
-        .then(() => commit("editStore", { payload }))
+    async editStore({ commit }, value) {
+      await Axios.put(storeApi + value._id, value)
+        .then(() => commit("editStore", { value }))
         .catch((err) => alert(err));
     },
   },
 
+  mutations: {
+    fetchStore(state, { res }) {
+      state.storeData = res.data;
+    },
+    addStore(state, { value }) {
+      state.storeData.push(value);
+    },
+    deleteStore(state, { value }) {
+      state.storeData.filter((del) => value.id !== del.id);
+    },
+    editStore(state, { value }) {
+      state.storeData[value.id].name = value.name;
+      state.storeData[value.id].description = value.description;
+      state.storeData[value.id].rating = value.rating;
+    },
+  },
+
   getters: {
-    tableData: (state) => state.tableData,
+    storeData: (state) => state.storeData,
   },
 });

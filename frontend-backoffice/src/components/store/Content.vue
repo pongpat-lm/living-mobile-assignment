@@ -24,7 +24,7 @@
     <!-- content -->
     <el-table
       :header-cell-style="{ background: '#F2F2F2' }"
-      :data="$store.getters.tableData"
+      :data="storeTable"
       style="width: 1078px"
       height="500"
     >
@@ -47,7 +47,7 @@
           <el-button
             type="text"
             size="small"
-            @click="toDelete"
+            @click="toDelete, this.deleteStore(_id)"
             icon="el-icon-delete"
           ></el-button>
         </div>
@@ -100,7 +100,10 @@
         </el-form>
         <span slot="footer" class="dialog-footer">
           <el-button type="text" @click="clickCreate = false">Cancel</el-button>
-          <el-button type="primary" @click="submitForm('createForm')" round
+          <el-button
+            type="primary"
+            @click="submitForm('createForm'), addStore()"
+            round
             >Add Store</el-button
           >
         </span>
@@ -154,7 +157,10 @@
         </el-form>
         <span slot="footer" class="dialog-footer">
           <el-button type="text" @click="clickEdit = false">Cancel</el-button>
-          <el-button type="primary" @click="submitForm('editForm')" round
+          <el-button
+            type="primary"
+            @click="submitForm('editForm'), editStore(_id)"
+            round
             >Edit Store</el-button
           >
         </span>
@@ -171,13 +177,14 @@ export default {
       type: String,
       default: "",
     },
-    tableData: {
-      type: Array,
-      default: () => [],
-    },
+    // storeData: {
+    //   type: Array,
+    //   default: () => [],
+    // },
   },
   data() {
     return {
+      storeTable: [],
       labelWidth: "100px",
       clickCreate: false,
       clickEdit: false,
@@ -206,6 +213,9 @@ export default {
   created() {
     this.fetchStore();
   },
+  mounted() {
+    this.storeTable = this.$store.getters.storeData;
+  },
   methods: {
     toCreate() {
       this.clickCreate = true;
@@ -228,9 +238,7 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         console.log("valid");
-        if (valid) {
-          alert("submit!");
-        } else {
+        if (!valid) {
           console.log("error submit!!");
           return false;
         }
@@ -240,28 +248,36 @@ export default {
       this.$store.dispatch("fetchStore");
     },
     deleteStore(_id) {
-      let payload = { _id: _id };
-      this.$store.dispatch("deleteStore", payload);
+      let value = { _id: _id };
+      this.$store.dispatch("deleteStore", value);
     },
-    openEdit(Store) {
-      this.name = Store.name;
-      this.description = Store.description;
-      this.rating = Store.rating;
+    addStore() {
+      let value = {
+        name: this.name,
+        description: this.description,
+        rating: this.rating,
+      };
+      this.$store.dispatch("addStore", value);
     },
-    closeEdit() {
-      this.name = "";
-      this.description = "";
-      this.rating = 0;
-    },
+    // openEdit(Store) {
+    //   this.name = Store.name;
+    //   this.description = Store.description;
+    //   this.rating = Store.rating;
+    // },
+    // closeEdit() {
+    //   this.name = "";
+    //   this.description = "";
+    //   this.rating = 0;
+    // },
     editStore(_id) {
-      let payload = {
+      let value = {
         index: this.editIndex,
         _id: _id,
         name: this.name,
         description: this.description,
         rating: this.rating,
       };
-      this.$store.dispatch("editStore", payload).then(this.closeEdit());
+      this.$store.dispatch("editStore", value).then(this.closeEdit());
     },
   },
 };
