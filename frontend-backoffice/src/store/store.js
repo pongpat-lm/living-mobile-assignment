@@ -13,17 +13,18 @@ export const store = new Vuex.Store({
 
   mutations: {
     fetchStore(state, { res }) {
-      state.stores = res.data;
+      state.tableData = res.data;
     },
     addStore(state, { payload }) {
-      state.stores.push(payload);
+      state.tableData.push(payload);
     },
     deleteStore(state, { payload }) {
-      state.stores.splice(payload.index, 1);
+      state.tableData.splice(payload.id, 1);
     },
     editStore(state, { payload }) {
-      state.stores[payload.index].name = payload.name;
-      state.stores[payload.index].price = payload.price;
+      state.tableData[payload.id].name = payload.name;
+      state.tableData[payload.id].description = payload.description;
+      state.tableData[payload.id].rating = payload.rating;
     },
   },
 
@@ -52,6 +53,6 @@ export const store = new Vuex.Store({
   },
 
   getters: {
-    stores: (state) => state.stores,
+    tableData: (state) => state.tableData,
   },
 });

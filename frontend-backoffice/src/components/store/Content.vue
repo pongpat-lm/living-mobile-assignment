@@ -16,15 +16,15 @@
     </el-row>
 
     <!-- delete -->
-    <div class="deleteAlert" v-if="clickdelete">
-      <el-alert title="delete success" type="error" center show-icon>
+    <div class="deleteAlert" v-if="clickDelete">
+      <el-alert title="delete store success" type="error" center show-icon>
       </el-alert>
     </div>
 
     <!-- content -->
     <el-table
       :header-cell-style="{ background: '#F2F2F2' }"
-      :data="tableData"
+      :data="$store.getters.tableData"
       style="width: 1078px"
       height="500"
     >
@@ -54,10 +54,10 @@
       </el-table-column>
     </el-table>
 
-    <!-- editPage -->
-    <div class="editPage" v-if="clickEdit">
-      <el-dialog title="Edit Store" :visible.sync="clickEdit">
-        <el-form :model="form" :rules="rules" ref="editForm">
+    <!-- createPage -->
+    <div class="createPage" v-if="clickCreate">
+      <el-dialog title="Add Store" :visible.sync="clickCreate">
+        <el-form :model="form" :rules="rules" ref="createForm">
           <el-form-item
             label="Store name"
             :label-width="labelWidth"
@@ -65,6 +65,7 @@
           >
             <el-input
               v-model="form.name"
+              placeholder="please input your name"
               autocomplete="off"
               clearable
               style="width: 442px"
@@ -77,6 +78,60 @@
           >
             <el-input
               v-model="form.description"
+              placeholder="please input your description"
+              autocomplete="off"
+              clearable
+              style="width: 442px"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="rating" :label-width="labelWidth" prop="rating">
+            <el-select
+              v-model="form.rating"
+              placeholder="please select your rating"
+              style="width: 442px"
+            >
+              <el-option label="One star" value="1"></el-option>
+              <el-option label="Two stars" value="2"></el-option>
+              <el-option label="three stars" value="3"></el-option>
+              <el-option label="Four stars" value="4"></el-option>
+              <el-option label="Five stars" value="5"></el-option>
+            </el-select>
+          </el-form-item>
+        </el-form>
+        <span slot="footer" class="dialog-footer">
+          <el-button type="text" @click="clickCreate = false">Cancel</el-button>
+          <el-button type="primary" @click="submitForm('createForm')" round
+            >Add Store</el-button
+          >
+        </span>
+      </el-dialog>
+    </div>
+
+    <!-- editPage -->
+    <div class="editPage" v-if="clickEdit">
+      <el-dialog title="Edit Store" :visible.sync="clickEdit">
+        <el-form :model="form" :rules="rules" ref="editForm">
+          <el-form-item
+            label="Store name"
+            :label-width="labelWidth"
+            prop="name"
+          >
+            <el-input
+              v-model="form.name"
+              placeholder="please input your name"
+              autocomplete="off"
+              clearable
+              style="width: 442px"
+            ></el-input>
+          </el-form-item>
+          <el-form-item
+            label="Description"
+            :label-width="labelWidth"
+            prop="description"
+          >
+            <el-input
+              v-model="form.description"
+              placeholder="please input your description"
               autocomplete="off"
               clearable
               style="width: 442px"
@@ -105,57 +160,6 @@
         </span>
       </el-dialog>
     </div>
-
-    <!-- createPage -->
-    <div class="createPage" v-else-if="clickCreate">
-      <el-dialog title="Add Store" :visible.sync="clickCreate">
-        <el-form :model="form" :rules="rules" ref="createForm">
-          <el-form-item
-            label="Store name"
-            :label-width="labelWidth"
-            prop="name"
-          >
-            <el-input
-              v-model="form.name"
-              autocomplete="off"
-              clearable
-              style="width: 442px"
-            ></el-input>
-          </el-form-item>
-          <el-form-item
-            label="Description"
-            :label-width="labelWidth"
-            prop="description"
-          >
-            <el-input
-              v-model="form.description"
-              autocomplete="off"
-              clearable
-              style="width: 442px"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="rating" :label-width="labelWidth" prop="rating">
-            <el-select
-              v-model="form.rating"
-              placeholder="please select your rating"
-              style="width: 442px"
-            >
-              <el-option label="One star" value="1"></el-option>
-              <el-option label="Two stars" value="2"></el-option>
-              <el-option label="three stars" value="3"></el-option>
-              <el-option label="Four stars" value="4"></el-option>
-              <el-option label="Five stars" value="5"></el-option>
-            </el-select>
-          </el-form-item>
-        </el-form>
-        <span slot="footer" class="dialog-footer">
-          <el-button type="text" @click="clickCreate = false">Cancel</el-button>
-          <el-button type="primary" @click="submitForm('createForm')" round
-            >Add Store</el-button
-          >
-        </span>
-      </el-dialog>
-    </div>
   </div>
 </template>
 
@@ -174,7 +178,7 @@ export default {
   },
   data() {
     return {
-      labelWidth: "120px",
+      labelWidth: "100px",
       clickCreate: false,
       clickEdit: false,
       clickDelete: false,
@@ -199,21 +203,25 @@ export default {
       },
     };
   },
-  // created() {
-  //   this.fetchStore();
-  // },
+  created() {
+    this.fetchStore();
+  },
   methods: {
     toCreate() {
       this.clickCreate = true;
       this.clickEdit = false;
+      this.clickDelete = false;
       console.log("click create");
     },
     toEdit() {
       this.clickCreate = false;
       this.clickEdit = true;
+      this.clickDelete = false;
       console.log("click edit");
     },
     toDelete() {
+      this.clickCreate = false;
+      this.clickEdit = false;
       this.clickDelete = true;
       console.log("click delete");
     },
@@ -228,9 +236,33 @@ export default {
         }
       });
     },
-    // fetchStore() {
-    //   this.$store.dispatch("fetchStore");
-    // },
+    fetchStore() {
+      this.$store.dispatch("fetchStore");
+    },
+    deleteStore(_id) {
+      let payload = { _id: _id };
+      this.$store.dispatch("deleteStore", payload);
+    },
+    openEdit(Store) {
+      this.name = Store.name;
+      this.description = Store.description;
+      this.rating = Store.rating;
+    },
+    closeEdit() {
+      this.name = "";
+      this.description = "";
+      this.rating = 0;
+    },
+    editStore(_id) {
+      let payload = {
+        index: this.editIndex,
+        _id: _id,
+        name: this.name,
+        description: this.description,
+        rating: this.rating,
+      };
+      this.$store.dispatch("editStore", payload).then(this.closeEdit());
+    },
   },
 };
 </script>
@@ -261,7 +293,7 @@ export default {
   align-items: center;
   padding: 8px 24px;
   background-color: #28b7ff;
-  border-radius: 100px;
+  border: none;
   position: absolute;
   width: 188px;
   height: 44px;
@@ -302,5 +334,9 @@ export default {
 .el-dialog {
   width: 612px;
   height: 401px;
+}
+
+.el-dialog__header {
+  border-bottom: 1px solid #d9d9d9;
 }
 </style>
