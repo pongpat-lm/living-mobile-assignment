@@ -58,7 +58,7 @@
           >
             <el-select
               v-model="form.storeName"
-              placeholder="Please select a zone"
+              placeholder="Please Select Store name"
             >
               <el-option label="Zone No.1" value="shanghai"></el-option>
               <el-option label="Zone No.2" value="beijing"></el-option>
@@ -93,7 +93,7 @@
           >
             <el-select
               v-model="form.storeName"
-              placeholder="Please select a zone"
+              placeholder="Please Select Store name"
             >
               <el-option label="Zone No.1" value="shanghai"></el-option>
               <el-option label="Zone No.2" value="beijing"></el-option>
@@ -166,9 +166,16 @@ export default {
     this.table = this.tableData;
   },
   methods: {
-    fetchData() {
-      this.$store.dispatch("fetchStores");
-      this.$store.dispatch("fetchCategories");
+    async fetchData() {
+      await this.$store.dispatch("fetchStores");
+      await this.$store.dispatch("fetchCategories");
+      let storeData = this.$store.getters.stores;
+      let categoryData = this.$store.getters.categories;
+      categoryData.forEach((cat,index) => {
+        let idx = storeData.findIndex(sto => cat.storeId === sto.id)
+        categoryData[index].storeName = storeData[idx].name
+      })
+      this.table = categoryData;
     },
     toEdit() {
       this.clickAddForm = false;
