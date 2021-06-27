@@ -15,7 +15,7 @@
     <div>
       <el-table
         :header-cell-style="{ background: '#F2F2F2' }"
-        :data="tableData"
+        :data="table"
         style="width: 100%"
       >
         <el-table-column prop="id" label="Id"> </el-table-column>
@@ -129,6 +129,7 @@ export default {
   },
   data() {
     return {
+      table: [],
       labelWidth: "120px",
       clickEditForm: false,
       clickAddForm: false,
@@ -157,7 +158,18 @@ export default {
       },
     };
   },
+  created() {
+    this.fetchData();
+    console.log("call api")
+  },
+  mounted() {
+    this.table = this.tableData;
+  },
   methods: {
+    fetchData() {
+      this.$store.dispatch("fetchStores");
+      this.$store.dispatch("fetchCategories");
+    },
     toEdit() {
       this.clickAddForm = false;
       this.clickEditForm = true;
