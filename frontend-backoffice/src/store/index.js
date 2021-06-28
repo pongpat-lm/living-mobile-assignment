@@ -26,8 +26,8 @@ export default new Vuex.Store({
       state.categories.splice(payload.index, 1);
     },
     editCategory(state, { payload }) {
-      state.categories[payload.index].name = payload.name;
-      state.categories[payload.index].storeId = payload.storeId;
+      state.categories[payload.id].name = payload.name;
+      state.categories[payload.id].storeId = payload.storeId;
     },
   },
   actions: {
@@ -52,7 +52,8 @@ export default new Vuex.Store({
         .catch((err) => console.log(err));
     },
     async editCategory({ commit }, payload) {
-      await Axios.put(categoryApi + payload.id, payload)
+      let { id, ...data } = payload
+      await Axios.put(categoryApi + id, data)
         .then(() => commit("editCategory", { payload }))
         .catch((err) => console.log(err));
     },

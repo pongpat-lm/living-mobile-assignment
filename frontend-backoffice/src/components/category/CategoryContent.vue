@@ -20,10 +20,7 @@
         <el-table-column label=" ">
           <div slot-scope="scope" class="operation">
             <el-button type="text" @click.native="toEdit(scope.$index, table)"
-              ><img
-                src="../../assets/Edit.png"
-                alt="edit"
-                class="edit"
+              ><img src="../../assets/Edit.png" alt="edit" class="edit"
             /></el-button>
             <el-button type="text">
               <img src="../../assets/Copy.png" alt="copy" class="copy" />
@@ -38,7 +35,7 @@
     <!-- edit-form -->
     <div class="edit-form" v-if="clickEditForm">
       <el-dialog title="Edit Category" :visible.sync="clickEditForm">
-        <el-form :model="editForm" ref="formEdit">
+        <el-form :model="editForm" ref="formEdit" :rules="rules">
           <el-form-item
             label="Category name"
             :label-width="labelWidth"
@@ -49,7 +46,7 @@
           <el-form-item
             label="Store name"
             :label-width="labelWidth"
-            prop="storeName"
+            prop="storeId"
           >
             <el-select
               v-model="editForm.storeId"
@@ -88,7 +85,7 @@
           <el-form-item
             label="Store name"
             :label-width="labelWidth"
-            prop="storeName"
+            prop="storeId"
           >
             <el-select
               v-model="addForm.storeId"
@@ -140,7 +137,7 @@ export default {
       clickAddForm: false,
       addForm: {
         name: "",
-        storeId: ""
+        storeId: "",
       },
       editForm: {
         name: "",
@@ -159,7 +156,7 @@ export default {
             trigger: "blur",
           },
         ],
-        storeName: {
+        storeId: {
           required: true,
           message: "Please Select Store name",
           trigger: "blur",
@@ -184,25 +181,39 @@ export default {
         let idx = this.storeData.findIndex((sto) => cat.storeId === sto.id);
         this.categoryData[index].storeName = this.storeData[idx].name;
       });
-      console.log(this.storeData)
+      console.log(this.storeData);
       this.table = this.categoryData;
     },
     toEdit(index, table) {
       this.clickAddForm = false;
       this.clickEditForm = true;
+      this.editForm.id = table[index].id;
       this.editForm.name = table[index].name;
-      this.editForm.storeId = table[index].storeId; 
+      this.editForm.storeId = table[index].storeId;
       console.log("click edit");
     },
     toAdd() {
       this.clickAddForm = true;
       this.clickEditForm = false;
+      (this.addForm.name = ""), (this.addForm.storeId = "");
     },
     submitForm(formName) {
-      this.$refs[formName].validate((valid) => {
+      this.$refs[formName].validate(async (valid) => {
         console.log("valid");
         if (valid) {
-          alert("submit!");
+          if (formName === "formAdd") {
+            await this.$store.dispatch("addCategory", this.addForm);
+            await this.fetchData();
+            this.clickAddForm = false;
+            return true;
+          } else if (formName === "formEdit") {
+            await this.$store.dispatch("editCategory", this.editForm);
+            await this.fetchData();
+            this.clickEditForm = false;
+            return true;
+          } else {
+            return;
+          }
         } else {
           console.log("error submit!!");
           return false;
