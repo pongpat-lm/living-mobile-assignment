@@ -3,11 +3,7 @@
     <el-row class="header" type="flex" justify="space-between">
       <el-col class="name" :span="5">{{ name }}</el-col>
       <el-col class="button" :span="5"
-        ><el-button
-          type="primary"
-          round
-          icon="el-icon-plus"
-          @click="toAdd"
+        ><el-button type="primary" round icon="el-icon-plus" @click="toAdd"
           >Add New {{ name }}</el-button
         ></el-col
       >
@@ -22,13 +18,12 @@
         <el-table-column prop="name" label="Name"> </el-table-column>
         <el-table-column prop="storeName" label="Store Name"></el-table-column>
         <el-table-column label=" ">
-          <div class="operation">
-            <el-button type="text" @click.native="toEdit"
+          <div slot-scope="scope" class="operation">
+            <el-button type="text" @click.native="toEdit(scope.$index, table)"
               ><img
                 src="../../assets/Edit.png"
                 alt="edit"
                 class="edit"
-                @click="toEdit"
             /></el-button>
             <el-button type="text">
               <img src="../../assets/Copy.png" alt="copy" class="copy" />
@@ -43,13 +38,13 @@
     <!-- edit-form -->
     <div class="edit-form" v-if="clickEditForm">
       <el-dialog title="Edit Category" :visible.sync="clickEditForm">
-        <el-form :model="form" :rules="rules" ref="formEdit">
+        <el-form :model="editForm" ref="formEdit">
           <el-form-item
             label="Category name"
             :label-width="labelWidth"
             prop="name"
           >
-            <el-input v-model="form.name" autocomplete="off"></el-input>
+            <el-input v-model="editForm.name" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item
             label="Store name"
@@ -57,11 +52,15 @@
             prop="storeName"
           >
             <el-select
-              v-model="form.storeName"
+              v-model="editForm.storeId"
               placeholder="Please Select Store name"
             >
-              <el-option label="Zone No.1" value="shanghai"></el-option>
-              <el-option label="Zone No.2" value="beijing"></el-option>
+              <el-option
+                v-for="store in storeData"
+                :key="store.id"
+                :label="store.name"
+                :value="store.id"
+              ></el-option>
             </el-select>
           </el-form-item>
         </el-form>
@@ -78,13 +77,13 @@
     <!-- add-form -->
     <div class="add-form" v-else-if="clickAddForm">
       <el-dialog title="Add Category" :visible.sync="clickAddForm">
-        <el-form :model="form" :rules="rules" ref="formAdd">
+        <el-form :model="addForm" :rules="rules" ref="formAdd">
           <el-form-item
             label="Category name"
             :label-width="labelWidth"
             prop="name"
           >
-            <el-input v-model="form.name" autocomplete="off"></el-input>
+            <el-input v-model="addForm.name" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item
             label="Store name"
@@ -92,11 +91,15 @@
             prop="storeName"
           >
             <el-select
-              v-model="form.storeName"
+              v-model="addForm.storeId"
               placeholder="Please Select Store name"
             >
-              <el-option label="Zone No.1" value="shanghai"></el-option>
-              <el-option label="Zone No.2" value="beijing"></el-option>
+              <el-option
+                v-for="store in storeData"
+                :key="store.id"
+                :label="store.name"
+                :value="store.id"
+              ></el-option>
             </el-select>
           </el-form-item>
         </el-form>
@@ -130,12 +133,18 @@ export default {
   data() {
     return {
       table: [],
+      storeData: [],
+      categoryData: [],
       labelWidth: "120px",
       clickEditForm: false,
       clickAddForm: false,
-      form: {
+      addForm: {
         name: "",
-        storeName: "",
+        storeId: ""
+      },
+      editForm: {
+        name: "",
+        storeId: "",
       },
       rules: {
         name: [
@@ -160,7 +169,7 @@ export default {
   },
   created() {
     this.fetchData();
-    console.log("call api")
+    console.log("call api");
   },
   mounted() {
     this.table = this.tableData;
@@ -169,17 +178,20 @@ export default {
     async fetchData() {
       await this.$store.dispatch("fetchStores");
       await this.$store.dispatch("fetchCategories");
-      let storeData = this.$store.getters.stores;
-      let categoryData = this.$store.getters.categories;
-      categoryData.forEach((cat,index) => {
-        let idx = storeData.findIndex(sto => cat.storeId === sto.id)
-        categoryData[index].storeName = storeData[idx].name
-      })
-      this.table = categoryData;
+      this.storeData = this.$store.getters.stores;
+      this.categoryData = this.$store.getters.categories;
+      this.categoryData.forEach((cat, index) => {
+        let idx = this.storeData.findIndex((sto) => cat.storeId === sto.id);
+        this.categoryData[index].storeName = this.storeData[idx].name;
+      });
+      console.log(this.storeData)
+      this.table = this.categoryData;
     },
-    toEdit() {
+    toEdit(index, table) {
       this.clickAddForm = false;
       this.clickEditForm = true;
+      this.editForm.name = table[index].name;
+      this.editForm.storeId = table[index].storeId; 
       console.log("click edit");
     },
     toAdd() {
@@ -211,7 +223,7 @@ export default {
 }
 
 .el-dialog__header {
-  border-bottom: 1px solid #D9D9D9;
+  border-bottom: 1px solid #d9d9d9;
 }
 
 .name {
@@ -235,5 +247,4 @@ export default {
 .operation > *:hover {
   opacity: 0.5;
 }
-
 </style>
