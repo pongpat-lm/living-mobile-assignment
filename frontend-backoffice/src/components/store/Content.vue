@@ -15,16 +15,10 @@
       >
     </el-row>
 
-    <!-- delete -->
-    <div class="deleteAlert" v-if="clickDelete">
-      <el-alert title="delete store success" type="error" center show-icon>
-      </el-alert>
-    </div>
-
     <!-- content -->
     <el-table
       :header-cell-style="{ background: '#F2F2F2' }"
-      :data="this.$store.getters.storeData"
+      :data="Data"
       style="width: 1078px"
       height="500"
     >
@@ -37,17 +31,17 @@
       <el-table-column prop="rating" label="Rating" width="150px">
       </el-table-column>
       <el-table-column fixed="right" width="80px">
-        <div>
+        <div slot-scope="scope">
           <el-button
             type="text"
             size="small"
-            @click="toEdit"
+            @click="toEdit(scope.$index, Data)"
             icon="el-icon-edit"
           ></el-button>
           <el-button
             type="text"
             size="small"
-            @click="toDelete, this.deleteStore(_id)"
+            @click="deleteStore(scope.$index, Data)"
             icon="el-icon-delete"
           ></el-button>
         </div>
@@ -57,14 +51,14 @@
     <!-- createPage -->
     <div class="createPage" v-if="clickCreate">
       <el-dialog title="Add Store" :visible.sync="clickCreate">
-        <el-form :model="form" :rules="rules" ref="createForm">
+        <el-form :model="AddForm" :rules="rules" ref="createForm">
           <el-form-item
             label="Store name"
             :label-width="labelWidth"
             prop="name"
           >
             <el-input
-              v-model="form.name"
+              v-model="AddForm.name"
               placeholder="please input your name"
               autocomplete="off"
               clearable
@@ -77,7 +71,7 @@
             prop="description"
           >
             <el-input
-              v-model="form.description"
+              v-model="AddForm.description"
               placeholder="please input your description"
               autocomplete="off"
               clearable
@@ -86,7 +80,7 @@
           </el-form-item>
           <el-form-item label="rating" :label-width="labelWidth" prop="rating">
             <el-select
-              v-model="form.rating"
+              v-model="AddForm.rating"
               placeholder="please select your rating"
               style="width: 442px"
             >
@@ -102,7 +96,10 @@
           <el-button type="text" @click="clickCreate = false">Cancel</el-button>
           <el-button
             type="primary"
-            @click="submitForm('createForm'), addStore()"
+            @click="
+              submitForm('createForm');
+              addStore();
+            "
             round
             >Add Store</el-button
           >
@@ -113,14 +110,14 @@
     <!-- editPage -->
     <div class="editPage" v-if="clickEdit">
       <el-dialog title="Edit Store" :visible.sync="clickEdit">
-        <el-form :model="form" :rules="rules" ref="editForm">
+        <el-form :model="EditForm" :rules="rules" ref="editForm">
           <el-form-item
             label="Store name"
             :label-width="labelWidth"
             prop="name"
           >
             <el-input
-              v-model="form.name"
+              v-model="EditForm.name"
               placeholder="please input your name"
               autocomplete="off"
               clearable
@@ -133,7 +130,7 @@
             prop="description"
           >
             <el-input
-              v-model="form.description"
+              v-model="EditForm.description"
               placeholder="please input your description"
               autocomplete="off"
               clearable
@@ -142,7 +139,7 @@
           </el-form-item>
           <el-form-item label="Rating" :label-width="labelWidth" prop="rating">
             <el-select
-              v-model="form.rating"
+              v-model="EditForm.rating"
               placeholder="please select your rating"
               :label-width="labelWidth"
               style="width: 442px"
@@ -159,7 +156,10 @@
           <el-button type="text" @click="clickEdit = false">Cancel</el-button>
           <el-button
             type="primary"
-            @click="submitForm('editForm'), editStore(_id)"
+            @click="
+              submitForm('editForm');
+              editStore();
+            "
             round
             >Edit Store</el-button
           >
@@ -185,11 +185,19 @@ export default {
   data() {
     return {
       storeTable: [],
+      Data: [],
+      editId: "",
+      editIndex: "",
+      delId: "",
       labelWidth: "100px",
       clickCreate: false,
       clickEdit: false,
-      clickDelete: false,
-      form: {
+      AddForm: {
+        name: "",
+        description: "",
+        rating: "",
+      },
+      EditForm: {
         name: "",
         description: "",
         rating: "",
@@ -210,27 +218,28 @@ export default {
       },
     };
   },
-  created() {
-    this.fetchStore();
+  async created() {
+    await this.fetchStore();
+    this.Data = this.$store.getters.storeData;
   },
   methods: {
     toCreate() {
       this.clickCreate = true;
       this.clickEdit = false;
-      this.clickDelete = false;
+      this.AddForm.name = "";
+      this.AddForm.description = "";
+      this.AddForm.rating = "";
       console.log("click create");
     },
-    toEdit() {
+    toEdit(index, table) {
+      this.EditForm.name = table[index].name;
+      this.EditForm.description = table[index].description;
+      this.EditForm.rating = table[index].rating;
       this.clickCreate = false;
       this.clickEdit = true;
-      this.clickDelete = false;
+      this.editIndex = index;
+      this.editId = table[index].id;
       console.log("click edit");
-    },
-    toDelete() {
-      this.clickCreate = false;
-      this.clickEdit = false;
-      this.clickDelete = true;
-      console.log("click delete");
     },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
@@ -241,40 +250,39 @@ export default {
         }
       });
     },
-    fetchStore() {
-      this.$store.dispatch("fetchStore");
+    async fetchStore() {
+      await this.$store.dispatch("fetchStore");
     },
-    deleteStore(_id) {
-      let Value = { _id: _id };
-      this.$store.dispatch("deleteStore", Value);
-    },
-    addStore() {
-      let Value = {
-        name: this.form.name,
-        description: this.form.description,
-        rating: parseInt(this.form.rating),
+    async deleteStore(index, table) {
+      const Value = {
+        id: table[index].id,
+        index: index,
       };
-      this.$store.dispatch("addStore", Value);
+      await this.$store.dispatch("deleteStore", Value);
+      console.log(index, table[index], 3);
+      await this.fetchStore();
     },
-    // openEdit(Store) {
-    //   this.name = Store.name;
-    //   this.description = Store.description;
-    //   this.rating = Store.rating;
-    // },
-    // closeEdit() {
-    //   this.name = "";
-    //   this.description = "";
-    //   this.rating = 0;
-    // },
-    editStore(_id) {
+    async addStore() {
       let Value = {
+        name: this.AddForm.name,
+        description: this.AddForm.description,
+        rating: parseInt(this.AddForm.rating),
+      };
+      console.log(Value);
+      await this.$store.dispatch("addStore", Value);
+      await this.fetchStore();
+    },
+    async editStore() {
+      let Value = {
+        id: this.editId,
         index: this.editIndex,
-        _id: _id,
-        name: this.name,
-        description: this.description,
-        rating: this.rating,
+        name: this.EditForm.name,
+        description: this.EditForm.description,
+        rating: parseInt(this.EditForm.rating),
       };
-      this.$store.dispatch("editStore", Value).then(this.closeEdit());
+      console.log(Value);
+      await this.$store.dispatch("editStore", Value);
+      await this.fetchStore();
     },
   },
 };
