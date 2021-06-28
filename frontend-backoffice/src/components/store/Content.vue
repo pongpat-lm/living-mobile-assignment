@@ -57,12 +57,14 @@
     <!-- createPage -->
     <div class="createPage" v-if="clickCreate">
       <el-dialog title="Add Store" :visible.sync="clickCreate">
-        <el-form :model="AddForm" :rules="rules" ref="createForm">
-          <el-form-item
-            label="Store name"
-            :label-width="labelWidth"
-            prop="name"
-          >
+        <el-form
+          :model="AddForm"
+          :rules="rules"
+          :label-width="labelWidth"
+          label-position="top"
+          ref="createForm"
+        >
+          <el-form-item label="Store name" prop="name">
             <el-input
               v-model="AddForm.name"
               placeholder="please input your name"
@@ -71,11 +73,7 @@
               style="width: 442px"
             ></el-input>
           </el-form-item>
-          <el-form-item
-            label="Description"
-            :label-width="labelWidth"
-            prop="description"
-          >
+          <el-form-item label="Description" prop="description">
             <el-input
               v-model="AddForm.description"
               placeholder="please input your description"
@@ -84,7 +82,7 @@
               style="width: 442px"
             ></el-input>
           </el-form-item>
-          <el-form-item label="rating" :label-width="labelWidth" prop="rating">
+          <el-form-item label="rating" prop="rating">
             <el-select
               v-model="AddForm.rating"
               placeholder="please select your rating"
@@ -116,12 +114,14 @@
     <!-- editPage -->
     <div class="editPage" v-if="clickEdit">
       <el-dialog title="Edit Store" :visible.sync="clickEdit">
-        <el-form :model="EditForm" :rules="rules" ref="editForm">
-          <el-form-item
-            label="Store name"
-            :label-width="labelWidth"
-            prop="name"
-          >
+        <el-form
+          :model="EditForm"
+          :rules="rules"
+          :label-width="labelWidth"
+          label-position="top"
+          ref="editForm"
+        >
+          <el-form-item label="Store name" prop="name">
             <el-input
               v-model="EditForm.name"
               placeholder="please input your name"
@@ -130,11 +130,7 @@
               style="width: 442px"
             ></el-input>
           </el-form-item>
-          <el-form-item
-            label="Description"
-            :label-width="labelWidth"
-            prop="description"
-          >
+          <el-form-item label="Description" prop="description">
             <el-input
               v-model="EditForm.description"
               placeholder="please input your description"
@@ -147,7 +143,6 @@
             <el-select
               v-model="EditForm.rating"
               placeholder="please select your rating"
-              :label-width="labelWidth"
               style="width: 442px"
             >
               <el-option label="One star" value="1"></el-option>
@@ -279,8 +274,9 @@ export default {
     async addStore() {
       let Value = {
         name: this.AddForm.name,
-        description: this.AddForm.description,
-        rating: parseInt(this.AddForm.rating),
+        description:
+          this.AddForm.description || "description of " + this.AddForm.name,
+        rating: parseInt(this.AddForm.rating) || 0,
       };
       await this.$store.dispatch("addStore", Value);
       await this.fetchStore();
@@ -371,5 +367,17 @@ export default {
 
 .el-dialog__header {
   border-bottom: 1px solid #d9d9d9;
+}
+
+.el-dialog__body {
+  padding: 10px 80px;
+}
+
+.el-form--label-top .el-form-item__label {
+  padding: 0;
+}
+
+.el-form-item {
+  margin-bottom: 10px;
 }
 </style>
