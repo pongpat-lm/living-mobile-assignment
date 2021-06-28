@@ -22,10 +22,13 @@
             <el-button type="text" @click.native="toEdit(scope.$index, table)"
               ><img src="../../assets/Edit.png" alt="edit" class="edit"
             /></el-button>
-            <el-button type="text">
+            <el-button type="text" @click.native="toCopy(scope.$index, table)">
               <img src="../../assets/Copy.png" alt="copy" class="copy" />
             </el-button>
-            <el-button type="text">
+            <el-button
+              type="text"
+              @click.native="toDelete(scope.$index, table)"
+            >
               <img src="../../assets/Delete.png" alt="delete" class="delete" />
             </el-button>
           </div>
@@ -191,6 +194,38 @@ export default {
       this.editForm.name = table[index].name;
       this.editForm.storeId = table[index].storeId;
       console.log("click edit");
+    },
+    async toCopy(index, table) {
+      this.addForm.name = table[index].name;
+      this.addForm.storeId = table[index].storeId;
+      await this.$store.dispatch("addCategory", this.addForm);
+      await this.fetchData();
+    },
+    toDelete(index, table) {
+      this.$confirm(
+        "This will permanently delete the category. Continue?",
+        "Warning",
+        {
+          confirmButtonText: "OK",
+          cancelButtonText: "Cancel",
+          type: "warning",
+        }
+      )
+        .then(async () => {
+          let data = table[index];
+          await this.$store.dispatch("deleteCategory", data);
+          await this.fetchData();
+          this.$message({
+            type: "success",
+            message: "Delete completed",
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "Delete canceled",
+          });
+        });
     },
     toAdd() {
       this.clickAddForm = true;
