@@ -1,5 +1,5 @@
 <template>
-  <CategoryContent :name="name" :tableData="tableData" />
+  <CategoryContent :name="name" />
 </template>
 
 <script>
@@ -12,18 +12,6 @@ export default {
   data() {
     return {
       name: "Category",
-      tableData: [
-        {
-          date: "2016-05-03",
-          name: "Tom",
-          address: "No. 189, Grove St, Los Angeles",
-        },
-        {
-          date: "2016-05-02",
-          name: "Tom",
-          address: "No. 189, Grove St, Los Angeles",
-        },
-      ],
     };
   },
 };

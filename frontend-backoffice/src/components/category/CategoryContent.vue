@@ -125,10 +125,6 @@ export default {
       type: String,
       default: "",
     },
-    tableData: {
-      type: Array,
-      default: () => [],
-    },
   },
   data() {
     return {
@@ -169,10 +165,6 @@ export default {
   },
   created() {
     this.fetchData();
-    console.log("call api");
-  },
-  mounted() {
-    this.table = this.tableData;
   },
   methods: {
     async fetchData() {
@@ -184,7 +176,6 @@ export default {
         let idx = this.storeData.findIndex((sto) => cat.storeId === sto.id);
         this.categoryData[index].storeName = this.storeData[idx].name;
       });
-      console.log(this.storeData);
       this.table = this.categoryData;
     },
     toEdit(index, table) {
