@@ -28,15 +28,21 @@
       </el-table-column>
       <el-table-column prop="description" label="Description" width="378px">
       </el-table-column>
-      <el-table-column prop="rating" label="Rating" width="150px">
+      <el-table-column prop="rating" label="Rating" width="130px">
       </el-table-column>
-      <el-table-column fixed="right" width="80px">
+      <el-table-column fixed="right" width="100px">
         <div slot-scope="scope">
           <el-button
             type="text"
             size="small"
             @click="toEdit(scope.$index, Data)"
             icon="el-icon-edit"
+          ></el-button>
+          <el-button
+            type="text"
+            size="small"
+            @click="copyStore(scope.$index, Data)"
+            icon="el-icon-copy-document"
           ></el-button>
           <el-button
             type="text"
@@ -220,7 +226,6 @@ export default {
   },
   async created() {
     await this.fetchStore();
-    this.Data = this.$store.getters.storeData;
   },
   methods: {
     toCreate() {
@@ -250,8 +255,18 @@ export default {
         }
       });
     },
+    async copyStore(index, table) {
+      let Value = {
+        name: table[index].name,
+        description: table[index].description,
+        rating: parseInt(table[index].rating),
+      };
+      await this.$store.dispatch("addStore", Value);
+      await this.fetchStore();
+    },
     async fetchStore() {
       await this.$store.dispatch("fetchStore");
+      this.Data = await this.$store.getters.storeData;
     },
     async deleteStore(index, table) {
       const Value = {
@@ -259,7 +274,6 @@ export default {
         index: index,
       };
       await this.$store.dispatch("deleteStore", Value);
-      console.log(index, table[index], 3);
       await this.fetchStore();
     },
     async addStore() {
@@ -268,7 +282,6 @@ export default {
         description: this.AddForm.description,
         rating: parseInt(this.AddForm.rating),
       };
-      console.log(Value);
       await this.$store.dispatch("addStore", Value);
       await this.fetchStore();
     },
@@ -280,7 +293,6 @@ export default {
         description: this.EditForm.description,
         rating: parseInt(this.EditForm.rating),
       };
-      console.log(Value);
       await this.$store.dispatch("editStore", Value);
       await this.fetchStore();
     },
