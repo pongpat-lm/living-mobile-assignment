@@ -23,11 +23,13 @@ export default new Vuex.Store({
       state.categories = res.data;
     },
     deleteCategory(state, { payload }) {
-      state.categories.splice(payload.id, 1);
+      let idx = state.categories.findIndex(ele => ele.id === payload.id);
+      state.categories.splice(idx, 1);
     },
     editCategory(state, { payload }) {
-      state.categories[payload.id].name = payload.name;
-      state.categories[payload.id].storeId = payload.storeId;
+      let idx = state.categories.findIndex(ele => ele.id === payload.id);
+      state.categories[idx].name = payload.name;
+      state.categories[idx].storeId = payload.storeId;
     },
   },
   actions: {
