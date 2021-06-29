@@ -12,7 +12,7 @@
       <el-table
         :header-cell-style="{ background: '#F2F2F2' }"
         :data="table"
-        style="width: 1078px"
+        style="width: 100%"
       >
         <el-table-column prop="id" label="Id"> </el-table-column>
         <el-table-column prop="name" label="Name"> </el-table-column>
@@ -268,50 +268,41 @@ export default {
 };
 </script>
 
-<style scroped>
+<style scoped>
 .container {
   padding: 30px 150px;
 }
-
 .form {
   font-weight: 600;
   padding: 0px 50px;
 }
-
 .header {
   margin-bottom: 20px;
 }
-
 .el-select {
   width: 100%;
 }
-
 .el-dialog__header {
   border-bottom: 1px solid #d9d9d9;
 }
-
 .el-dialog__title {
   font-weight: 600;
 }
-
 .name {
   font-weight: bold;
   font-size: 30px;
   display: flex;
   align-items: center;
 }
-
 .button {
   display: flex;
   justify-content: flex-end;
 }
-
 .operation {
   padding: 0px 40px;
   display: flex;
   justify-content: space-evenly;
 }
-
 .operation > *:hover {
   opacity: 0.5;
 }

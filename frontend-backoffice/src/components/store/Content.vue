@@ -56,7 +56,7 @@
 
     <!-- createPage -->
     <div class="createPage" v-if="clickCreate">
-      <el-dialog title="Add Store" :visible.sync="clickCreate">
+      <el-dialog class="form" title="Add Store" :visible.sync="clickCreate">
         <el-form
           :model="AddForm"
           :rules="rules"
@@ -103,13 +103,7 @@
         </el-form>
         <span slot="footer" class="dialog-footer">
           <el-button type="text" @click="clickCreate = false">Cancel</el-button>
-          <el-button
-            type="primary"
-            @click="
-              submitForm('createForm');
-              addStore();
-            "
-            round
+          <el-button type="primary" @click="submitForm('createForm')" round
             >Add Store</el-button
           >
         </span>
@@ -118,7 +112,7 @@
 
     <!-- editPage -->
     <div class="editPage" v-if="clickEdit">
-      <el-dialog title="Edit Store" :visible.sync="clickEdit">
+      <el-dialog class="form" title="Edit Store" :visible.sync="clickEdit">
         <el-form
           :model="EditForm"
           :rules="rules"
@@ -165,13 +159,7 @@
         </el-form>
         <span slot="footer" class="dialog-footer">
           <el-button type="text" @click="clickEdit = false">Cancel</el-button>
-          <el-button
-            type="primary"
-            @click="
-              submitForm('editForm');
-              editStore();
-            "
-            round
+          <el-button type="primary" @click="submitForm('editForm')" round
             >Edit Store</el-button
           >
         </span>
@@ -248,9 +236,21 @@ export default {
       console.log("click edit");
     },
     submitForm(formName) {
-      this.$refs[formName].validate((valid) => {
+      this.$refs[formName].validate(async (valid) => {
         console.log("valid");
-        if (!valid) {
+        if (valid) {
+          if (formName === "createForm") {
+            await this.addStore();
+            this.clickCreate = false;
+            return true;
+          } else if (formName === "editForm") {
+            await this.editStore();
+            this.clickEdit = false;
+            return true;
+          } else {
+            return;
+          }
+        } else {
           console.log("error submit!!");
           return false;
         }
@@ -324,7 +324,7 @@ export default {
 };
 </script>
 
-<style scroped>
+<style scoped>
 .contrainer {
   display: flex;
 }
