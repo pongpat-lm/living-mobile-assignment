@@ -13,7 +13,7 @@ export default new Vuex.Store({
     categories: [],
   },
   mutations: {
-    fetchStore(state, { res }) {
+    fetchStores(state, { res }) {
       state.storeData = res.data;
     },
     addStore(state, { Value }) {
@@ -44,9 +44,9 @@ export default new Vuex.Store({
     },
   },
   actions: {
-    async fetchStore({ commit }) {
+    async fetchStores({ commit }) {
       await Axios.get(storeApi)
-        .then((res) => commit("fetchStore", { res }))
+        .then((res) => commit("fetchStores", { res }))
         .catch((err) => console.log(err));
     },
     async addStore({ commit }, Value) {

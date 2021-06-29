@@ -214,7 +214,7 @@ export default {
     };
   },
   async created() {
-    await this.fetchStore();
+    await this.fetchStores();
   },
   methods: {
     toCreate() {
@@ -263,10 +263,10 @@ export default {
         rating: parseInt(table[index].rating),
       };
       await this.$store.dispatch("addStore", Value);
-      await this.fetchStore();
+      await this.fetchStores();
     },
-    async fetchStore() {
-      await this.$store.dispatch("fetchStore");
+    async fetchStores() {
+      await this.$store.dispatch("fetchStores");
       this.Data = await this.$store.getters.storeData;
     },
     deleteStore(index, table) {
@@ -289,7 +289,7 @@ export default {
             message: "Delete completed",
           });
           this.$store.dispatch("deleteStore", Value);
-          this.fetchStore();
+          this.fetchStores();
         })
         .catch(() => {
           this.$message({
@@ -306,7 +306,7 @@ export default {
         rating: parseInt(this.AddForm.rating) || 0,
       };
       await this.$store.dispatch("addStore", Value);
-      await this.fetchStore();
+      await this.fetchStores();
     },
     async editStore() {
       let Value = {
@@ -318,7 +318,7 @@ export default {
         rating: parseInt(this.EditForm.rating),
       };
       await this.$store.dispatch("editStore", Value);
-      await this.fetchStore();
+      await this.fetchStores();
     },
   },
 };
