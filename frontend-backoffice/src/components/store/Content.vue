@@ -23,33 +23,33 @@
       height="500"
     >
       <div slot="empty" style="color: red">Users is empty</div>
-      <el-table-column prop="id" label="ID" width="200px"> </el-table-column>
-      <el-table-column prop="name" label="Name" width="270px">
+      <el-table-column prop="id" label="ID" width="290px"> </el-table-column>
+      <el-table-column prop="name" label="Name" width="200px">
       </el-table-column>
-      <el-table-column prop="description" label="Description" width="378px">
+      <el-table-column prop="description" label="Description" width="348px">
       </el-table-column>
-      <el-table-column prop="rating" label="Rating" width="130px">
+      <el-table-column prop="rating" label="Rating" width="120px">
       </el-table-column>
-      <el-table-column fixed="right" width="100px">
+      <el-table-column width="120px">
         <div slot-scope="scope">
           <el-button
             type="text"
             size="small"
             @click="toEdit(scope.$index, Data)"
-            icon="el-icon-edit"
-          ></el-button>
+            ><img src="../../assets/Edit.png"
+          /></el-button>
           <el-button
             type="text"
             size="small"
             @click="copyStore(scope.$index, Data)"
-            icon="el-icon-copy-document"
-          ></el-button>
+            ><img src="../../assets/Copy.png"
+          /></el-button>
           <el-button
             type="text"
             size="small"
             @click="deleteStore(scope.$index, Data)"
-            icon="el-icon-delete"
-          ></el-button>
+            ><img src="../../assets/Delete.png"
+          /></el-button>
         </div>
       </el-table-column>
     </el-table>
@@ -88,11 +88,16 @@
               placeholder="please select your rating"
               style="width: 442px"
             >
-              <el-option label="One star" value="1"></el-option>
-              <el-option label="Two stars" value="2"></el-option>
-              <el-option label="three stars" value="3"></el-option>
-              <el-option label="Four stars" value="4"></el-option>
-              <el-option label="Five stars" value="5"></el-option>
+              <el-option label="1" value="1"></el-option>
+              <el-option label="2" value="2"></el-option>
+              <el-option label="3" value="3"></el-option>
+              <el-option label="4" value="4"></el-option>
+              <el-option label="5" value="5"></el-option>
+              <el-option label="6" value="6"></el-option>
+              <el-option label="7" value="7"></el-option>
+              <el-option label="8" value="8"></el-option>
+              <el-option label="9" value="9"></el-option>
+              <el-option label="10" value="10"></el-option>
             </el-select>
           </el-form-item>
         </el-form>
@@ -145,11 +150,16 @@
               placeholder="please select your rating"
               style="width: 442px"
             >
-              <el-option label="One star" value="1"></el-option>
-              <el-option label="Two stars" value="2"></el-option>
-              <el-option label="three stars" value="3"></el-option>
-              <el-option label="Four stars" value="4"></el-option>
-              <el-option label="Five stars" value="5"></el-option>
+              <el-option label="1" value="1"></el-option>
+              <el-option label="2" value="2"></el-option>
+              <el-option label="3" value="3"></el-option>
+              <el-option label="4" value="4"></el-option>
+              <el-option label="5" value="5"></el-option>
+              <el-option label="6" value="6"></el-option>
+              <el-option label="7" value="7"></el-option>
+              <el-option label="8" value="8"></el-option>
+              <el-option label="9" value="9"></el-option>
+              <el-option label="10" value="10"></el-option>
             </el-select>
           </el-form-item>
         </el-form>
@@ -178,10 +188,6 @@ export default {
       type: String,
       default: "",
     },
-    // storeData: {
-    //   type: Array,
-    //   default: () => [],
-    // },
   },
   data() {
     return {
@@ -286,7 +292,8 @@ export default {
         id: this.editId,
         index: this.editIndex,
         name: this.EditForm.name,
-        description: this.EditForm.description,
+        description:
+          this.EditForm.description || "description of " + this.AddForm.name,
         rating: parseInt(this.EditForm.rating),
       };
       await this.$store.dispatch("editStore", Value);
