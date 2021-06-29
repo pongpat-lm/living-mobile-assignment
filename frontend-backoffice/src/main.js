@@ -3,17 +3,19 @@ import App from './App.vue'
 import './plugins/element.js'
 import './plugins/data-table.js'
 import "../src/assets/css/reset.css"
-import router from './router'
-
-import axios from "axios";
 import VueAxios from "vue-axios";
+import axios from "axios";
+
+import router from './router'
+import store from './store'
+
+Vue.config.productionTip = false;
 
 Vue.use(VueAxios, axios);
 
-
-Vue.config.productionTip = false
-
 new Vue({
   router,
+  store,
   render: h => h(App)
 }).$mount('#app')
+
