@@ -191,7 +191,7 @@ export default {
           this.categoryData[index].storeName = this.storeData[idx].name;
         }
         else {
-          this.categoryData[index].storeName = "(This store has been deleted.)"
+          this.categoryData[index].storeName = "***This store has been deleted***"
         }
       });
       this.table = this.categoryData;
@@ -288,6 +288,10 @@ export default {
 
 .el-dialog__header {
   border-bottom: 1px solid #d9d9d9;
+}
+
+.el-dialog__title {
+  font-weight: 600;
 }
 
 .name {
