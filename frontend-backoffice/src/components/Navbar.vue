@@ -107,7 +107,7 @@ export default {
 };
 </script>
 
-<style>
+<style scroped>
 .nav-bar {
   padding-left: 32px;
   background-color: #28b7ff;

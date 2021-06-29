@@ -324,7 +324,7 @@ export default {
 };
 </script>
 
-<style>
+<style scroped>
 .contrainer {
   display: flex;
 }

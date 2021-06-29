@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import CategoryContent from '../components/category/CategoryContent.vue'
+import CategoryContent from "../components/category/CategoryContent.vue";
 export default {
   name: "category",
   components: {
@@ -17,5 +17,5 @@ export default {
 };
 </script>
 
-<style>
+<style scroped>
 </style>

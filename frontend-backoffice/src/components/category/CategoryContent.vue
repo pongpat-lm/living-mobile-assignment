@@ -12,7 +12,7 @@
       <el-table
         :header-cell-style="{ background: '#F2F2F2' }"
         :data="table"
-        style="width: 100%"
+        style="width: 1078px"
       >
         <el-table-column prop="id" label="Id"> </el-table-column>
         <el-table-column prop="name" label="Name"> </el-table-column>
@@ -183,15 +183,15 @@ export default {
     async fetchData() {
       await this.$store.dispatch("fetchStores");
       await this.$store.dispatch("fetchCategories");
-      this.storeData = this.$store.getters.stores;
+      this.storeData = this.$store.getters.storeData;
       this.categoryData = this.$store.getters.categories;
       this.categoryData.forEach((cat, index) => {
         if (cat.storeId) {
           let idx = this.storeData.findIndex((sto) => cat.storeId === sto.id);
           this.categoryData[index].storeName = this.storeData[idx].name;
-        }
-        else {
-          this.categoryData[index].storeName = "***This store has been deleted***"
+        } else {
+          this.categoryData[index].storeName =
+            "***This store has been deleted***";
         }
       });
       this.table = this.categoryData;
@@ -268,7 +268,7 @@ export default {
 };
 </script>
 
-<style>
+<style scroped>
 .container {
   padding: 30px 150px;
 }

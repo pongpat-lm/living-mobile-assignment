@@ -166,7 +166,7 @@ export default {
 };
 </script>
 
-<style>
+<style scroped>
 .title {
   font-style: normal;
   font-weight: 500;

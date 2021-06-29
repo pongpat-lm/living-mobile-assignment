@@ -1,5 +1,5 @@
 <template>
-  <Content :name="name" :tableData="tableData" />
+  <Content :name="name" />
 </template>
 
 <script>
@@ -16,5 +16,5 @@ export default {
 };
 </script>
 
-<style>
+<style scroped>
 </style>
