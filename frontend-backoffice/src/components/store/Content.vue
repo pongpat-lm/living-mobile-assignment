@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="frame">
     <!-- header -->
     <el-row class="contrainer" type="flex" justify="space-between">
       <el-col class="topic" :span="6">{{ name }}</el-col>
@@ -56,7 +56,7 @@
 
     <!-- createPage -->
     <div class="createPage" v-if="clickCreate">
-      <el-dialog class="form" title="Add Store" :visible.sync="clickCreate">
+      <el-dialog title="Add Store" :visible.sync="clickCreate">
         <el-form
           :model="AddForm"
           :rules="rules"
@@ -112,7 +112,7 @@
 
     <!-- editPage -->
     <div class="editPage" v-if="clickEdit">
-      <el-dialog class="form" title="Edit Store" :visible.sync="clickEdit">
+      <el-dialog title="Edit Store" :visible.sync="clickEdit">
         <el-form
           :model="EditForm"
           :rules="rules"
@@ -388,38 +388,38 @@ export default {
   color: #231f20;
 }
 
-.el-dialog {
+.frame >>> .el-dialog {
   width: 612px;
   height: 401px;
   border-radius: 8px;
 }
 
-.el-dialog__header {
+.frame >>> .el-dialog__header {
   border-bottom: 1px solid #d9d9d9;
 }
 
-.el-dialog__title {
+.frame >>> .el-dialog__title {
   font-style: normal;
   font-weight: 600;
 }
 
-.el-dialog__body {
+.frame >>> .el-dialog__body {
   padding: 10px 80px;
 }
 
-.el-dialog__footer {
+.frame >>> .el-dialog__footer {
   padding: 10px 90px 20px;
 }
 
-.el-form--label-top .el-form-item__label {
+.frame >>> .el-form--label-top .el-form-item__label {
   padding: 0;
 }
 
-.el-form-item {
+.frame >>> .el-form-item {
   margin-bottom: 5px;
 }
 
-.el-form-item__label {
+.frame >>> .el-form-item__label {
   color: #231f20;
   font-style: normal;
   font-weight: 600;
