@@ -38,7 +38,13 @@
     <!-- edit-form -->
     <div class="edit-form" v-if="clickEditForm">
       <el-dialog title="Edit Category" :visible.sync="clickEditForm">
-        <el-form :label-position="labelPosition" :model="editForm" ref="formEdit" :rules="rules" class="form">
+        <el-form
+          :label-position="labelPosition"
+          :model="editForm"
+          ref="formEdit"
+          :rules="rules"
+          class="form"
+        >
           <el-form-item
             label="Category name"
             :label-width="labelWidth"
@@ -77,7 +83,13 @@
     <!-- add-form -->
     <div class="add-form" v-else-if="clickAddForm">
       <el-dialog title="Add Category" :visible.sync="clickAddForm">
-        <el-form :label-position="labelPosition" :model="addForm" :rules="rules" ref="formAdd" class="form">
+        <el-form
+          :label-position="labelPosition"
+          :model="addForm"
+          :rules="rules"
+          ref="formAdd"
+          class="form"
+        >
           <el-form-item
             label="Category name"
             :label-width="labelWidth"
@@ -128,7 +140,7 @@ export default {
   },
   data() {
     return {
-      labelPosition: 'top',
+      labelPosition: "top",
       table: [],
       storeData: [],
       categoryData: [],
@@ -174,8 +186,13 @@ export default {
       this.storeData = this.$store.getters.stores;
       this.categoryData = this.$store.getters.categories;
       this.categoryData.forEach((cat, index) => {
-        let idx = this.storeData.findIndex((sto) => cat.storeId === sto.id);
-        this.categoryData[index].storeName = this.storeData[idx].name;
+        if (cat.storeId) {
+          let idx = this.storeData.findIndex((sto) => cat.storeId === sto.id);
+          this.categoryData[index].storeName = this.storeData[idx].name;
+        }
+        else {
+          this.categoryData[index].storeName = "(This store has been deleted.)"
+        }
       });
       this.table = this.categoryData;
     },
