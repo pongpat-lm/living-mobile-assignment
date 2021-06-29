@@ -82,7 +82,7 @@
               style="width: 442px"
             ></el-input>
           </el-form-item>
-          <el-form-item label="rating" prop="rating">
+          <el-form-item label="Rating" prop="rating">
             <el-select
               v-model="AddForm.rating"
               placeholder="please select your rating"
@@ -269,13 +269,34 @@ export default {
       await this.$store.dispatch("fetchStore");
       this.Data = await this.$store.getters.storeData;
     },
-    async deleteStore(index, table) {
+    deleteStore(index, table) {
       const Value = {
         id: table[index].id,
         index: index,
       };
-      await this.$store.dispatch("deleteStore", Value);
-      await this.fetchStore();
+      this.$confirm(
+        "This will permanently delete the file. Continue?",
+        "Warning",
+        {
+          confirmButtonText: "OK",
+          cancelButtonText: "Cancel",
+          type: "warning",
+        }
+      )
+        .then(() => {
+          this.$message({
+            type: "success",
+            message: "Delete completed",
+          });
+          this.$store.dispatch("deleteStore", Value);
+          this.fetchStore();
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "Delete canceled",
+          });
+        });
     },
     async addStore() {
       let Value = {
@@ -316,7 +337,7 @@ export default {
   left: 171px;
   top: 32px;
   font-style: normal;
-  font-weight: 500;
+  font-weight: 600;
   font-size: 34px;
   line-height: 44px;
   letter-spacing: -0.25px;
@@ -370,14 +391,24 @@ export default {
 .el-dialog {
   width: 612px;
   height: 401px;
+  border-radius: 8px;
 }
 
 .el-dialog__header {
   border-bottom: 1px solid #d9d9d9;
 }
 
+.el-dialog__title {
+  font-style: normal;
+  font-weight: 600;
+}
+
 .el-dialog__body {
   padding: 10px 80px;
+}
+
+.el-dialog__footer {
+  padding: 10px 90px 20px;
 }
 
 .el-form--label-top .el-form-item__label {
@@ -385,6 +416,12 @@ export default {
 }
 
 .el-form-item {
-  margin-bottom: 10px;
+  margin-bottom: 5px;
+}
+
+.el-form-item__label {
+  color: #231f20;
+  font-style: normal;
+  font-weight: 600;
 }
 </style>
