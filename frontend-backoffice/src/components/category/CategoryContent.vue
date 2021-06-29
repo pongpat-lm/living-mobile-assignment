@@ -279,14 +279,18 @@ export default {
 .header {
   margin-bottom: 20px;
 }
-.el-select {
+.container >>> .el-select {
   width: 100%;
 }
-.el-dialog__header {
+.container >>> .el-dialog {
   border-bottom: 1px solid #d9d9d9;
 }
-.el-dialog__title {
+.container >>> .el-dialog__title {
   font-weight: 600;
+}
+
+.container >>> .el-dialog__header {
+  border-bottom: 1px solid #d9d9d9;
 }
 .name {
   font-weight: bold;
