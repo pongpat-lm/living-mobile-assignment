@@ -114,10 +114,14 @@ export default {
           axios.get("http://localhost:3000/menu").then((response) => {
             let menuData = response.data;
             menuData.forEach((menu, index) => {
-              let idx = this.categoryData.findIndex(
-                (cat) => cat.id === menu.categoryId
-              );
-              menuData[index].categoryName = this.categoryData[idx].name;
+              if (menu.categoryId) {
+                let idx = this.categoryData.findIndex(
+                  (cat) => cat.id === menu.categoryId
+                );
+                menuData[index].categoryName = this.categoryData[idx].name;
+              } else {
+                menuData[index].categoryName = "***Deleted***";
+              }
             });
             this.tableData = menuData;
           });
